@@ -31,14 +31,14 @@
             <div class="card">
                 <h5 class="card-header">
                     @lang('Authors list')
-                    <a href="{{ route('admin.slider_items.add')}}"><button style="float: right" class="btn btn-success">@lang('Add new user')</button></a>
+                    <a href=""><button style="float: right" class="btn btn-success">@lang('Add new user')</button></a>
                     <button style="float: right" class="btn btn-dark" data-action="show-change-priority-buttons">@lang('Change priority')</button>
 
                 </h5>
 
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered first">
+                        <table class="table table-striped table-bordered first" id="users-table">
                             <thead>
                             <col width="5%">
                             <col width="15%">
@@ -47,19 +47,20 @@
                             <col width="20%">
                             <col width="15%">
                             <col width="20%">
-                            <tr>
-                                <th>#</th>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
 
-                                <th>Name</th>
-                                <th>Image</th>
-                                <th>Email</th>
-                                <th>Phone Number</th>
+                                    <th>Name</th>
+                                    <th>Image</th>
+                                    <th>Email</th>
+                                    <th>Phone Number</th>
 
-                                <th>Ban</th>
-                                <th>Actions</th>
-                            </tr>
+                                    <th>Ban</th>
+                                    <th>Actions</th>
+                                </tr>
                             </thead>
-                            <tbody id="table-for-post-categories">
+                            <tbody>
                                 @foreach($authors as $author)
                                 <tr data-id="{{ $author->id}}">
                                     <td>{{ $author->id }}</td>
@@ -151,3 +152,35 @@
     <!-- ============================================================== -->
 </div>
 @endsection
+@push('footer_javascript')
+<script>
+    let contentOfDataTables = $('#users-table').DataTable({
+        "pageLength": 5,
+        "lengthMenu": [5, 10, 25, 50, 100, 250],
+        "serverSide": true,
+        "processing": true,
+        "responsive": true,
+        "ajax": {
+            "url": "{{ route('admin.authors.table_content')}}",
+            "type": "POST",
+            "data": {
+                "_token": "{{ csrf_token()}}"
+            },
+            ,
+                    "error": function (jqXHR, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + jqXHR.statusText + "\r\n" + jqXHR.responseText + "\r\n" + ajaxOptions.responseText);
+                    }
+        },
+        "columns": [
+            {"name": "id", "data": "id"},
+            {"name": "name", "data": "name", "orderable": false, "searchable": false},
+            {"name": "image", "data": "image"},
+            {"name": "email", "data": "email", "orderable": false, "searchable": false},
+            {"name": "phone_number", "data": "phone_number", "orderable": false, "searchable": false},
+            {"name": "ban", "data": "ban"},
+            {"name": "actions", "data": "actions", "className": "text-center"}
+
+        ]
+    });
+</script>
+@endpush

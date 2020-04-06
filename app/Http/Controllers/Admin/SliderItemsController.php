@@ -71,13 +71,15 @@ class SliderItemsController extends Controller {
 
         return redirect()->back();
     }
-    public function edit(SliderItem $sliderItem){
-        
-        return view('admin.slider_items.edit',[
-            'sliderItem'=>$sliderItem
+
+    public function edit(SliderItem $sliderItem) {
+
+        return view('admin.slider_items.edit', [
+            'sliderItem' => $sliderItem
         ]);
     }
-     public function update(Request $request, SliderItem $sliderItem) {
+
+    public function update(Request $request, SliderItem $sliderItem) {
         $formData = $request->validate([
             'title' => ['required', 'string', 'max:30'],
             'button_name' => ['required', 'string', 'max:20'],
@@ -85,12 +87,12 @@ class SliderItemsController extends Controller {
             'image' => ['required', 'file', 'image', 'max:51200'],
         ]);
 
-        
+
 
         $sliderItem->fill($formData);
 
 
-       
+
         $sliderItem->save();
 
 
@@ -109,6 +111,19 @@ class SliderItemsController extends Controller {
                     ->save();
         }
 
+
+        return redirect()->route('admin.slider_items.index');
+    }
+
+    public function delete(Request $request) {
+        $formData = $request->validate([
+            'slider_id' => ['required', 'numeric', 'exists:slider_items,id']
+        ]);
+
+        $item = SliderItem::findOrFail($formData['slider_id']);
+
+        
+        $item->delete();
 
         return redirect()->route('admin.slider_items.index');
     }

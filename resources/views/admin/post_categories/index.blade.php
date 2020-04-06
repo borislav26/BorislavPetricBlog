@@ -73,9 +73,11 @@
                                                 >
                                                 <i class="far fa-trash-alt"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-outline-light">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
+                                            <a href="{{ route('front.posts.category',['category'=>$category->id])}}"> 
+                                                <button class="btn btn-sm btn-outline-light">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </a>
                                             <span class="btn btn-outline-secondary"  style="display: none;" data-action="change-priority-button">
                                                 <i class="fas fa-sort">Change priority</i>
                                             </span>
@@ -208,15 +210,15 @@
     $('[data-action="show-change-priority-buttons"]').on('click', function () {
         $(this).hide();
         $('#change-priorities-form').show();
-        
+
         $('#table-for-post-categories [data-action="change-priority-button"]').show();
     });
     $('#change-priorities-form [data-action="cancel"]').on('click', function () {
         $('[data-action="show-change-priority-buttons"]').show();
         $('#change-priorities-form').hide();
-        
 
-        
+
+
         $('#table-for-post-categories [data-action="change-priority-button"]').hide();
     });
     $('#table-for-post-categories').sortable({

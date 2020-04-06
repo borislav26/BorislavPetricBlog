@@ -78,20 +78,7 @@
                     <!-- campaign tab one -->
                     <!-- ============================================================== -->
                     <div class="influence-profile-content pills-regular">
-                        <!--                                <ul class="nav nav-pills mb-3 nav-justified" id="pills-tab" role="tablist">
-                                                            <li class="nav-item">
-                                                                <a class="nav-link active" id="pills-campaign-tab" data-toggle="pill" href="#pills-campaign" role="tab" aria-controls="pills-campaign" aria-selected="true">Campaign</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link" id="pills-packages-tab" data-toggle="pill" href="#pills-packages" role="tab" aria-controls="pills-packages" aria-selected="false">Packages</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab" aria-controls="pills-review" aria-selected="false">Reviews</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link" id="pills-msg-tab" data-toggle="pill" href="#pills-msg" role="tab" aria-controls="pills-msg" aria-selected="false">Send Messages</a>
-                                                            </li>
-                                                        </ul>-->
+
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-campaign" role="tabpanel" aria-labelledby="pills-campaign-tab">
 
@@ -99,20 +86,24 @@
                                 <div class="card">
                                     <h5 class="card-header">Chage your profile</h5>
                                     <div class="card-body">
-                                        <form>
+                                        <form action="{{ route('admin.user_profile.change_profile',['userName'=>\Str::slug(\Auth::user()->name)])}}" method="post">
+                                            @csrf
                                             <div class="row">
                                                 <div class="offset-xl-3 col-xl-6 offset-lg-3 col-lg-3 col-md-12 col-sm-12 col-12 p-4">
                                                     <div class="form-group">
                                                         <label for="name">Your Name</label>
-                                                        <input type="text" class="form-control form-control-lg" id="name" placeholder="">
+                                                        <input type="text" class="form-control form-control-lg @if($errors->has('name')) is-invalid @endif" id="name" name="name" placeholder="" value="{{old('name',\Auth::user()->name)}}">
+                                                        @include('admin._layout.partials.form_errors',['fieldName'=>'name'])
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="email">Your phone</label>
-                                                        <input type="email" class="form-control form-control-lg" id="email" placeholder="">
+                                                        <input type="text" class="form-control form-control-lg @if($errors->has('phone_number')) is-invalid @endif" name="phone_number" id="email" placeholder="" value="{{old('name',\Auth::user()->phone_number)}}">
+                                                        @include('admin._layout.partials.form_errors',['fieldName'=>'name'])
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="subject">Your image</label>
-                                                        <input type="file" class="form-control form-control-lg" id="subject" placeholder="">
+                                                        <input type="file" class="form-control form-control-lg @if($errors->has('image')) is-invalid @endif" id="subject" placeholder="" name="image">
+                                                        @include('admin._layout.partials.form_errors',['fieldName'=>'name'])
                                                     </div>
 
                                                     <button type="submit" class="btn btn-primary float-right">Change</button>
@@ -125,36 +116,6 @@
 
                             </div>
 
-                            <!--                                    <div class="tab-pane fade" id="pills-msg" role="tabpanel" aria-labelledby="pills-msg-tab">
-                                                                    <div class="card">
-                                                                        <h5 class="card-header">Send Messages</h5>
-                                                                        <div class="card-body">
-                                                                            <form>
-                                                                                <div class="row">
-                                                                                    <div class="offset-xl-3 col-xl-6 offset-lg-3 col-lg-3 col-md-12 col-sm-12 col-12 p-4">
-                                                                                        <div class="form-group">
-                                                                                            <label for="name">Your Name</label>
-                                                                                            <input type="text" class="form-control form-control-lg" id="name" placeholder="">
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label for="email">Your Email</label>
-                                                                                            <input type="email" class="form-control form-control-lg" id="email" placeholder="">
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label for="subject">Subject</label>
-                                                                                            <input type="text" class="form-control form-control-lg" id="subject" placeholder="">
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label for="messages">Messgaes</label>
-                                                                                            <textarea class="form-control" id="messages" rows="3"></textarea>
-                                                                                        </div>
-                                                                                        <button type="submit" class="btn btn-primary float-right">Send Message</button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>-->
                         </div>
                     </div>
                     <!-- ============================================================== -->

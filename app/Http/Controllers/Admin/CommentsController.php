@@ -11,7 +11,7 @@ class CommentsController extends Controller {
     public function index() {
         $comments = Comment::query()
                 ->with(['post'])
-                ->orderBy('created_at', 'asc')
+                ->orderBy('created_at', 'desc')
                 ->get();
         return view('admin.comments.index', [
             'comments' => $comments

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PostCategory;
-
+use App\Models\Post;
 class PostCategoriesController extends Controller {
 
     public function index() {
@@ -66,7 +66,15 @@ class PostCategoriesController extends Controller {
         
         $category= PostCategory::findOrFail($formData['category_id']);
         
+        Post::query()
+                ->where('post_category_id',$category->id)
+                ->update([
+                    'post_category_id'=>1
+                ]);
         
+        PostCategory::query()
+                ->where('priority','>',$category->priority)
+                ->decrement('priority');
         $category->delete();
         
         return redirect()->route('admin.post_categories.index');

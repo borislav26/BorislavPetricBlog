@@ -65,10 +65,8 @@ class PostsController extends Controller {
         $postWithTheMostViews = Post::query()
                 ->where('created_at', '>=', date('Y-m-d H:i:s', strtotime('-1 month')))
                 ->orderBy('reviews', 'desc')
-                ->limit(3)
-                ->get();
-        $post->reviews++;
-        $post->save();
+                ->limit(3);
+   
         return view('front.posts.single', [
             'post' => $post,
             'postTags' => $postTags,
@@ -252,6 +250,21 @@ class PostsController extends Controller {
         return response()->json([
             'success_message'=>'the comment has been added'
         ]);
+    }
+    public function incrementViews(Request $request){
+        $formData=$request->validate([
+            'post_id'=>['required','numeric','exists:posts,id']
+        ]);
+        
+        $post= Post::findOrFail($formData['post_id']);
+        
+        $post->reviews++;
+        
+        $post->save();
+        return response()->json([
+            'success_message'=>'sve je odradjeno'
+        ]);
+        
     }
 
 }

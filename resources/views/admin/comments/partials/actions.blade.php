@@ -1,20 +1,20 @@
 @if($comment->enable==0)
-<div class="text-danger">DISABLED</div>
+<span class="text-danger">DISABLED</span>
 @endif
 @if($comment->enable==1)
-<div class="text-success">ENABLED</div>
+<span class="text-success">ENABLED</span>
 @endif
 <div class="switch-button switch-button-success">
     <input 
         type="checkbox" 
-        @if($comment->enable==1)checked="" @endif 
         name="enable" 
-        id="switch{{$comment->id}}" 
+        id="switch_{{$comment->id}}" 
         value="{{ $comment->enable}}" 
         data-action="enable"
         data-id="{{ $comment->id}}"
+        @if($comment->enable==1)checked="" @endif 
         >
         <span>
-        <label for="switch{{ $comment->id}}"></label>
+        <label for="switch_{{ $comment->id}}"></label>
     </span>
 </div>

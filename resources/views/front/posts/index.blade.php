@@ -15,7 +15,20 @@
                         <div class="post-details">
                             <div class="post-meta d-flex justify-content-between">
                                 <div class="date meta-last">{{ $post->giveMeHumanFriendlyDate()}}</div>
-                                <div class="category"><a href="blog-category.html">{{ $post->category->name}}</a></div>
+                                @if($post->post_category_id!=0)
+                                <div class="category">
+                                    <a href="{{ route('front.posts.category',['category'=>$post->category->id])}}">
+                                        {{ $post->category->name}}
+                                    </a>
+                                </div>
+                                @endif
+                                @if($post->post_category_id==0)
+                                <div class="category">
+                                    <a href="">
+                                        @lang('Uncategorized')
+                                    </a>
+                                </div>
+                                @endif
                             </div><a href="{{ route('front.posts.single',['post'=>$post->id])}}">
                                 <h3 class="h4">{{ $post->title}}</h3></a>
                             <p class="text-muted">{{ $post->shortDescription}}</p>

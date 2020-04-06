@@ -71,11 +71,17 @@ class PostTagsController extends Controller {
     }
 
     public function tableContent() {
+        $query = PostTags::query();
+        $dataTable = \DataTables::of($query);
 
-        $postTags = PostTags::all();
-        return view('admin.post_tags.partials.table_content', [
-            'postTags' => $postTags
-        ]);
+        $dataTable->addColumn('actions', function($tag) {
+            return view('admin.post_tags.partials.actions',[
+                'tag'=>$tag
+            ]);
+        })
+        ->rawColumns(['actions']);
+
+        return $dataTable->make(true);
     }
 
 }

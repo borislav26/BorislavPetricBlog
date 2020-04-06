@@ -35,10 +35,10 @@
                     <form style="display: none; float: right" class="btn-group" action="{{route('admin.slider_items.change_order')}}" method="post" id="change-order-form">
                         @csrf
                         <input type="hidden" id="values-of-slider-items" value="" name="orders">
-                        <button  class="btn btn-dark" data-action="change-change" type="submit">@lang('Save priorities')</button>
+                        <button  class="btn btn-dark" data-action="change-change" type="submit">@lang('Save orders')</button>
                         <button  class="btn btn-dark" data-action="cancel" type="button">@lang('Cancel')</button>
                     </form>
-                    <button style="float: right" class="btn btn-dark" data-action="show-change-order-buttons">@lang('Change priority')</button>
+                    <button style="float: right" class="btn btn-dark" data-action="show-change-order-buttons">@lang('Change order')</button>
 
                 </h5>
 
@@ -87,18 +87,23 @@
                                     <td>
                                         <div class="btn-group ml-auto">
                                             <a href="{{ route('admin.slider_items.edit',['sliderItem'=>$item->id])}}"><button class="btn btn-sm btn-outline-light">Edit</button></a>
-                                            <button class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#modalDiscount">
+                                            <button 
+                                                class="btn btn-sm btn-outline-light" 
+                                                data-toggle="modal" 
+                                                data-target="#modalDiscount" 
+                                                data-action="delete"
+                                                data-id="{{$item->id}}"
+                                                data-name="{{ $item->title}}"
+                                                >
                                                 <i class="far fa-trash-alt"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-outline-light">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
+
                                             <span class="btn btn-outline-secondary" 
                                                   style="display: none;" 
                                                   data-action="change-order-button"
 
                                                   >
-                                                <i class="fas fa-sort">Change priority</i>
+                                                <i class="fas fa-sort">Change order</i>
                                             </span>
                                         </div>
                                     </td>
@@ -152,16 +157,19 @@
 <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullHeightModalRight">Launch
   modal</button>-->
 
-<!--Modal: modalDiscount-->
-<div class="modal fade right" id="modalDiscount" tabindex="-1" role="dialog" aria-labelledby="fullHeightModalRight"
-     aria-hidden="true" data-backdrop="true">
+<form  action="{{route('admin.slider_items.delete')}}" 
+       method="POST"
+       class="modal fade right" id="modalDiscount" tabindex="-1" role="dialog" aria-labelledby="fullHeightModalRight"
+       aria-hidden="true" data-backdrop="true">
+    @csrf
     <div class="modal-dialog modal-side modal-bottom-right modal-notify modal-danger" role="document">
+        <input type="hidden" name="slider_id" value="">
         <!--Content-->
         <div class="modal-content">
             <!--Header-->
             <div class="modal-header">
-                <p class="heading">Discount offer:
-                    <strong>10% off</strong>
+                <p class="heading">@lang('Delete action')
+                    <strong></strong>
                 </p>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -176,20 +184,16 @@
                     <div class="col-3">
                         <p></p>
                         <p class="text-center">
-                            <i class="fas fa-gift fa-4x"></i>
+                            <i class="fas fa-trash fa-4x"></i>
                         </p>
                     </div>
 
                     <div class="col-9">
-                        <p>Sharing is caring. Therefore, from time to time we like to give our visitors small gifts. Today is
-                            one of those days.</p>
-                        <p>
-                            <strong>Copy the following code and use it at the checkout. It's valid for
-                                <u>one day</u>.</strong>
-                        </p>
-                        <h2>
-                            <span class="badge">v52gs1</span>
-                        </h2>
+                        <p>@lang('Are you shure want delete slider with name:')</p>
+                        <h3>
+                            <strong id="slider_title"></strong>
+                        </h3>
+
 
                     </div>
                 </div>
@@ -197,17 +201,15 @@
 
             <!--Footer-->
             <div class="modal-footer flex-center">
-                <a href="https://mdbootstrap.com/products/jquery-ui-kit/" class="btn btn-danger">Get it
-                    now
-                    <i class="far fa-gem ml-1 white-text"></i>
-                </a>
-                <a type="button" class="btn btn-outline-danger waves-effect" data-dismiss="modal">No, thanks</a>
+                <button type="submit" class="btn btn-danger">Delete
+                    <i class="fas fa-trash ml-1 white-text"></i>
+                </button>
+                <button type="button" class="btn btn-outline-danger waves-effect" data-dismiss="modal">No, thanks</button>
             </div>
         </div>
         <!--/.Content-->
     </div>
-</div>
-<!--Modal: modalDiscount-->
+</form>
 @endsection
 
 @push('head_css')
@@ -225,7 +227,7 @@
 
         $('#table-for-slider-items [data-action="change-order-button"]').show();
     });
-    $('#change-priorities-form [data-action="cancel"]').on('click', function () {
+    $('#change-order-form [data-action="cancel"]').on('click', function () {
         $('[data-action="show-change-order-buttons"]').show();
         $('#change-order-form').hide();
 
@@ -243,6 +245,12 @@
         }
 
     });
+        $('#table-for-slider-items [data-action="delete"]').on('click', function () {
+        let categoryId = $(this).attr('data-id');
+        let categoryName = $(this).attr('data-name');
 
+        $('#modalDiscount #slider_title').text(categoryName);
+        $('#modalDiscount [name="slider_id"]').val(categoryId);
+    });
 </script>
 @endpush('footer_javascript')

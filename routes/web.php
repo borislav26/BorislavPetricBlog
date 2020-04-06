@@ -29,6 +29,7 @@ Route::namespace('Front')->prefix('/')->group(function() {
         Route::get('/tag/{tag}', 'PostsController@tag')->name('front.posts.tag');
         Route::get('/author/{author}', 'PostsController@author')->name('front.posts.author');
         Route::post('/leave-comment', 'PostsController@leaveComment')->name('front.posts.leave_comment');
+        Route::post('/increment-views', 'PostsController@incrementViews')->name('front.posts.increment_views');
     });
 });
 Auth::routes();
@@ -39,7 +40,9 @@ Route::middleware('auth')->namespace('Admin')->prefix('/admin')->group(function(
         Route::get('/', 'PostsController@index')->name('admin.posts.index');
         Route::get('/add', 'PostsController@add')->name('admin.posts.add');
         Route::get('/edit/{post}', 'PostsController@edit')->name('admin.posts.edit');
+        Route::post('/update/{post}', 'PostsController@update')->name('admin.posts.update');
         Route::post('/insert/', 'PostsController@insert')->name('admin.posts.insert');
+        Route::post('/table-content', 'PostsController@tableContent')->name('admin.posts.table_content');
     });
     Route::prefix('/post-categories')->group(function() {
         Route::get('/', 'PostCategoriesController@index')->name('admin.post_categories.index');
@@ -58,7 +61,7 @@ Route::middleware('auth')->namespace('Admin')->prefix('/admin')->group(function(
         Route::post('/insert', 'PostTagsController@insert')->name('admin.post_tags.insert');
         Route::post('/update/{tag}', 'PostTagsController@update')->name('admin.post_tags.update');
         Route::post('/delete', 'PostTagsController@delete')->name('admin.post_tags.delete');
-        Route::get('/table-content', 'PostTagsController@tableContent')->name('admin.post_tags.table_content');
+        Route::post('/table-content', 'PostTagsController@tableContent')->name('admin.post_tags.table_content');
     });
     Route::prefix('/comments')->group(function() {
         Route::get('/', 'CommentsController@index')->name('admin.comments.index');
@@ -71,6 +74,7 @@ Route::middleware('auth')->namespace('Admin')->prefix('/admin')->group(function(
         Route::get('/edit/{sliderItem}', 'SliderItemsController@edit')->name('admin.slider_items.edit');
         Route::post('/insert', 'SliderItemsController@insert')->name('admin.slider_items.insert');
         Route::post('/update/{sliderItem}', 'SliderItemsController@update')->name('admin.slider_items.update');
+        Route::post('/delete', 'SliderItemsController@delete')->name('admin.slider_items.delete');
         Route::post('/change-order', 'SliderItemsController@changeOrder')->name('admin.slider_items.change_order');
     });
     Route::prefix('/authors')->group(function() {
@@ -79,17 +83,10 @@ Route::middleware('auth')->namespace('Admin')->prefix('/admin')->group(function(
         Route::get('/edit/{author}', 'UsersController@edit')->name('admin.authors.edit');
         Route::post('/insert', 'UsersController@insert')->name('admin.authors.insert');
         Route::post('/update/{author}', 'UsersController@update')->name('admin.authors.update');
+        Route::post('/table-content', 'UsersController@tableContent')->name('admin.authors.table_content');
     });
     Route::prefix('/user-profile')->group(function() {
         Route::get('/{userName?}', 'UserProfileController@index')->name('admin.user_profile.index');
-        Route::get('/add', 'UsersController@add')->name('admin.users.add');
-        Route::get('/edit/{user}', 'UsersController@edit')->name('admin.users.edit');
-        Route::post('/insert/', 'UsersController@insert')->name('admin.users.insert');
-        Route::post('/update/{user}', 'UsersController@update')->name('admin.users.update');
-        Route::post('/delete', 'UsersController@delete')->name('admin.users.delete');
-        Route::post('/delete-photo/{user}', 'UsersController@deletePhoto')->name('admin.users.delete_photo');
-        Route::post('/remove-from-index-page', 'UsersController@removeFromIndexPage')->name('admin.users.remove_from_index_page');
-        Route::post('/put-on-index-page', 'UsersController@putOnIndexPage')->name('admin.users.put_on_index_page');
-        Route::post('/datatable-content', 'UsersController@datatableContent')->name('admin.users.datatable_content');
+        Route::post('/{userName?}/change-profile', 'UserProfileController@changeProfile')->name('admin.user_profile.change_profile');
     });
 });

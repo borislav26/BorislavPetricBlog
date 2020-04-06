@@ -46,7 +46,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="post_category">@lang('Choose category of post')</label>
-                                <select class="form-control" id="post_category" name="post_category_id">
+                                <select class="form-control @if($errors->has('post_category_id'))  is-invalid @endif" id="post_category" name="post_category_id">
                                     <option value="">@lang('Choose Category')</option>
                                     @foreach($postCategories as $category)
                                     <option value="{{ $category->id }}" @if($category->id==old('post_category_id'))  selected @endif>{{ $category->name}}</option>
@@ -56,23 +56,26 @@
                                  @include('admin._layout.partials.form_errors',['fieldName'=>'post_category_id'])
                             </div>
                             <div class="form-group">
+                                
                                 <label class="custom-control custom-checkbox">@lang('Select tags')</label>
                                 @foreach($tags as $tag)
                                 <label class="custom-control custom-checkbox custom-control-inline">
                                     <input 
-                                        name="tag_id" 
+                                        name="tag_id[]" 
                                         value="{{ $tag->id}}" 
                                         type="checkbox" 
                                         class="custom-control-input"
-                                        @if($category->id==old('post_category_id'))  
+                                        @if( is_array(old('tag_id')) && in_array($tag->id,old('tag_id'))))  
                                         checked 
                                         @endif
-
+                                        
                                         >
                                         <span class="custom-control-label">{{ $tag->name}}</span>
                                 </label>
                                 @endforeach
-                                @include('admin._layout.partials.form_errors',['fieldName'=>'post_category_id'])
+                                
+                                    
+                             @include('admin._layout.partials.form_errors',['fieldName'=>'tag_id'])
                             </div>
                             <div class="form-group">
                                 <label class="custom-control custom-checkbox">@lang('Important')</label>
@@ -88,7 +91,7 @@
                                         @if(old('status_important')==1)
                                         checked=""
                                         @endif
-                                        class="custom-control-input"
+                                        class="custom-control-input @if($errors->has('status_important'))  is-invalid @endif"
                                         ><span class="custom-control-label">@lang('Yes')</span>
                                 </label>
                                 <label class="custom-control custom-radio custom-control-inline">
@@ -100,7 +103,7 @@
                                         @if(old('status_important')==0)
                                         checked=""
                                         @endif
-                                        class="custom-control-input"
+                                        class="custom-control-input @if($errors->has('status_important'))  is-invalid @endif"
                                         ><span class="custom-control-label">@lang('No')</span>
                                 </label>
                                 @include('admin._layout.partials.form_errors',['fieldName'=>'status_important'])
@@ -114,24 +117,24 @@
                                     <input 
                                         type="radio" 
                                    
-                                        name="enabled"
+                                        name="enable"
                                         value="1"
-                                        @if(old('status_important')==1)
+                                        @if(old('enable')==1)
                                         checked=""
                                         @endif
-                                        class="custom-control-input"
+                                        class="custom-control-input @if($errors->has('enabled'))  is-invalid @endif"
                                         ><span class="custom-control-label">@lang('Yes')</span>
                                 </label>
                                 <label class="custom-control custom-radio custom-control-inline">
                                     <input 
                                         type="radio" 
                                         
-                                        name="enabled"
+                                        name="enable"
                                         value="0"
-                                        @if(old('status_important')==0)
+                                        @if(old('enable')==0)
                                         checked=""
                                         @endif
-                                        class="custom-control-input"
+                                        class="custom-control-input @if($errors->has('enabled'))  is-invalid @endif"
                                         ><span class="custom-control-label">@lang('No')</span>
                                 </label>
                                 @include('admin._layout.partials.form_errors',['fieldName'=>'enable'])

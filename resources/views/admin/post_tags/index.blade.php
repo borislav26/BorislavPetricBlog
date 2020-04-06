@@ -32,13 +32,13 @@
                 <h5 class="card-header">
                     @lang('Post tags list')
                     <a href="{{ route('admin.post_tags.add')}}"><button style="float: right" class="btn btn-success">@lang('Add new post tag')</button></a>
-                    
+
 
                 </h5>
 
                 <div class="card-body">
                     <div class="table-responsive" id="post-tags-table-field">
-                        <table class="table table-striped table-bordered first">
+                        <table class="table table-striped table-bordered first" id="tags-table-field">
                             <col width="33%">
                             <col width="33%">
                             <col width="33%">
@@ -70,12 +70,12 @@
                                                 >
                                                 <i class="far fa-trash-alt"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-outline-light">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <span class="btn btn-outline-secondary" data-action="button-for-priority"  style="display: none;" data-action="change-priority-button">
-                                                <i class="fas fa-sort">Change priority</i>
-                                            </span>
+                                            <a href="{{ route('front.posts.tag',['tag'=>$tag->id])}}">
+                                                <button class="btn btn-sm btn-outline-light">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </a>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -202,19 +202,31 @@
 
         });
     }
-    $('[data-action="show-change-priority-buttons"]').on('click', function () {
-        $(this).hide();
-        $('body [data-action="change-priority-button"]').show();
-    });
-    $('#table-for-post-tags').sortable({
-        "handle": '.fa-sort',
-        "update": function (event, ui) {
-            let priorities = $('#table-for-post-tags').sortable('toArray', {
-                "attribute": 'data-id'
-            });
-            $('[data-form="change-priority"] #id-for-sorting').val(priorities);
-        }
+    let contentOfDataTables = $('#tags-table-field').DataTable({
+        "pageLength": 5,
+        "lengthMenu": [5, 10, 25, 50, 100, 250],
+        "serverSide": true,
+        "processing": true,
+        "responsive": true,
+        "ajax": {
+            "url": "{{ route('admin.post_tags.table_content')}}",
+            "type": "POST",
+            "data": {
+                "_token": "{{ csrf_token()}}"
+            },
 
+//
+//            },
+            "error": function (jqXHR, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + jqXHR.statusText + "\r\n" + jqXHR.responseText + "\r\n" + ajaxOptions.responseText);
+            }
+        },
+        "columns": [
+            {"name": "id", "data": "id"},
+            {"name": "name", "data": "name"},
+            {"name": "actions", "data": "actions", "className": "text-center"}
+
+        ]
     });
     $('#table-for-post-tags [data-action="delete"]').on('click', function () {
         let categoryId = $(this).attr('data-id');

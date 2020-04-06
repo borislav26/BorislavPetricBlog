@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-lg-7">
                     <h1>{{ $sliderItem->title}}</h1>
-                    <a href="blog-post.html" class="hero-link">{{ $sliderItem->button_name}}</a>
+                    <a href="{{ $sliderItem->url}}" class="hero-link">{{ $sliderItem->button_name}}</a>
                 </div>
             </div>
         </div>
@@ -42,9 +42,20 @@
                 <div class="text-inner d-flex align-items-center">
                     <div class="content">
                         <header class="post-header">
+                            @if($post->post_category_id!=0)
                             <div class="category">
-                                <a href="{{ route('front.posts.category',['category'=>$post->category->id])}}">{{ $post->category->name }}</a>
+                                <a href="{{ route('front.posts.category',['category'=>$post->category->id])}}">
+                                    {{ $post->category->name}}
+                                </a>
                             </div>
+                            @endif
+                            @if($post->post_category_id==0)
+                            <div class="category">
+                                <a href="">
+                                    @lang('Uncategorized')
+                                </a>
+                            </div>
+                            @endif
                             <a href="{{ route('front.posts.single',['post'=>$post->id])}}">
                                 <h2 class="h4">{{ $post->title}}</h2></a>
                         </header>
@@ -90,41 +101,6 @@
         <div class="owl-carousel" id="latest-posts-slider">
 
 
-<!--            <div class="row">
-                <div class="post col-md-4">
-                    <div class="post-thumbnail"><a href="blog-post.html"><img src="{{url('/themes/front/img/blog-1.jpg')}}" alt="..." class="img-fluid"></a></div>
-                    <div class="post-details">
-                        <div class="post-meta d-flex justify-content-between">
-                            <div class="date">20 May | 2016</div>
-                            <div class="category"><a href="blog-category.html">Business</a></div>
-                        </div><a href="blog-post.html">
-                            <h3 class="h4">Ways to remember your important ideas</h3></a>
-                        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                    </div>
-                </div>
-                <div class="post col-md-4">
-                    <div class="post-thumbnail"><a href="blog-post.html"><img src="{{url('/themes/front/img/blog-2.jpg')}}" alt="..." class="img-fluid"></a></div>
-                    <div class="post-details">
-                        <div class="post-meta d-flex justify-content-between">
-                            <div class="date">20 May | 2016</div>
-                            <div class="category"><a href="blog-category.html">Technology</a></div>
-                        </div><a href="blog-post.html">
-                            <h3 class="h4">Diversity in Engineering: Effect on Questions</h3></a>
-                        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                    </div>
-                </div>
-                <div class="post col-md-4">
-                    <div class="post-thumbnail"><a href="blog-post.html"><img src="{{url('/themes/front/img/blog-3.jpg')}}" alt="..." class="img-fluid"></a></div>
-                    <div class="post-details">
-                        <div class="post-meta d-flex justify-content-between">
-                            <div class="date">20 May | 2016</div>
-                            <div class="category"><a href="blog-category.html">Financial</a></div>
-                        </div><a href="blog-post.html">
-                            <h3 class="h4">Alberto Savoia Can Teach You About Interior</h3></a>
-                        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                    </div>
-                </div>
-            </div>-->
             @foreach($latestPosts as $key=>$post)
             @if($key%3==0)
             <div class="row">
@@ -144,7 +120,7 @@
             </div>
             @endif
             @endforeach
-        
+
             </section>
             <!-- Gallery Section-->
             <section class="gallery no-padding">    

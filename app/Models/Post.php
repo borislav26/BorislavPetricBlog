@@ -11,7 +11,7 @@ class Post extends Model
 {
     protected $table='posts';
     
-    protected $fillable=['title','shortDescription','mainContent','post_author_id','post_category_id','status_important','enable'];
+    protected $fillable=['title','shortDescription','mainContent','status_important','enable'];
     public function author(){
         return $this->hasOne(User::class,'id','post_author_id');
     }

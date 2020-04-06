@@ -13,6 +13,7 @@ class IndexController extends Controller
     public function index(){
         $sliderItems=SliderItem::query()
                 ->orderBy('order')
+                ->where('enable',1)
                 ->get();
         $postTags= PostTags::all();
         $latestPosts= Post::query()
