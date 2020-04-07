@@ -70,7 +70,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->title}}</td>
                                     <td>
-                                        <img class="mr-3 user-avatar-lg rounded" src="{{ $item->image}}" alt="Generic placeholder image">
+                                        <img class="mr-3 user-avatar-lg rounded" src="{{ $item->getPhotoUrl()}}" alt="Generic placeholder image">
                                     </td>
 
                                     <td>{{ $item->url}}</td>

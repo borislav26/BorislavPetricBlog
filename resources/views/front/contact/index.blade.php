@@ -35,6 +35,9 @@
                             @include('front._layout.partials.form_errors',['fieldName'=>'email_content'])
                         </div>
                         <div class="form-group col-md-12">
+                        {!! htmlFormSnippet() !!}
+                        </div>
+                        <div class="form-group col-md-12">
                             <button type="submit" class="btn btn-secondary">Submit Your Message</button>
                         </div>
                     </div>
@@ -85,7 +88,9 @@
     </div>
 </div>
 @endsection
-
+@push('head_css')
+{!! htmlScriptTagJsApi() !!}
+@endpush
 @push('footer_javascript')
 <script src="{{url('/themes/admin/assets/vendor/stellar.js-master/jquery.stellar.min.js')}}" type="text/javascript"></script>]
 <script type="text/javascript">

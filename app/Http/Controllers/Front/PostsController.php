@@ -15,6 +15,7 @@ class PostsController extends Controller {
     public function index() {
         $posts = Post::query()
                 ->withCount(['author', 'category', 'tags','comments'])
+                ->where('enable',1)
                 ->paginate(6);
         $postTags = PostTags::all();
         $postCategories = PostCategory::query()
@@ -46,6 +47,9 @@ class PostsController extends Controller {
     }
 
     public function single(Post $post) {
+        if($post->enable==0){
+            abort(404);
+        }
         $postTags = PostTags::all();
         $postCategories = PostCategory::query()
                 ->withCount(['posts'])
@@ -105,7 +109,7 @@ class PostsController extends Controller {
                 ->orderBy('reviews', 'desc')
                 ->limit(3)
                 ->get();
-        $posts = $category->posts()->with(['author', 'category', 'tags','comments'])->paginate(6);
+        $posts = $category->posts()->with(['author', 'category', 'tags','comments'])->where('enable',1)->paginate(6);
 
         return view('front.posts.category', [
             'categoriesWithHighestPriority' => $categoriesWithHighestPriority,
@@ -137,7 +141,7 @@ class PostsController extends Controller {
                 ->orderBy('reviews', 'desc')
                 ->limit(3)
                 ->get();
-        $posts = $tag->posts()->with(['author', 'category', 'tags','comments'])->paginate(6);
+        $posts = $tag->posts()->with(['author', 'category', 'tags','comments'])->where('enable',1)->paginate(6);
 
         return view('front.posts.tag', [
             'categoriesWithHighestPriority' => $categoriesWithHighestPriority,
@@ -169,7 +173,7 @@ class PostsController extends Controller {
                 ->orderBy('reviews', 'desc')
                 ->limit(3)
                 ->get();
-        $posts = $author->posts()->with(['author', 'category', 'tags','comments'])->paginate(6);
+        $posts = $author->posts()->with(['author', 'category', 'tags','comments'])->where('enable',1)->paginate(6);
 
         return view('front.posts.author', [
             'categoriesWithHighestPriority' => $categoriesWithHighestPriority,

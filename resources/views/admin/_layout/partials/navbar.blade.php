@@ -14,10 +14,10 @@
                     <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                         <div class="nav-user-info">
                             <h5 class="mb-0 text-white nav-user-name">{{ \Auth::user()->name}} </h5>
-                            <span class="status"></span><span class="ml-2">Available</span>
+                            <span class="status"></span><span class="ml-2">{{ \Auth::user()->role->name}}</span>
                         </div>
                         <a class="dropdown-item" href="{{ route('admin.user_profile.index',['userName'=>\Str::slug(\Auth::user()->name)])}}"><i class="fas fa-user mr-2"></i>Account</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-cog mr-2"></i>Setting</a>
+                        
                         <a class="dropdown-item" href="{{ route('logout') }}" 
                            onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();"

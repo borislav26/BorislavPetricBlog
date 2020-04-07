@@ -41,7 +41,8 @@ Route::middleware('auth')->namespace('Admin')->prefix('/admin')->group(function(
         Route::get('/add', 'PostsController@add')->name('admin.posts.add');
         Route::get('/edit/{post}', 'PostsController@edit')->name('admin.posts.edit');
         Route::post('/update/{post}', 'PostsController@update')->name('admin.posts.update');
-        Route::post('/insert/', 'PostsController@insert')->name('admin.posts.insert');
+        Route::post('/insert', 'PostsController@insert')->name('admin.posts.insert');
+        Route::post('/delete', 'PostsController@delete')->name('admin.posts.delete');
         Route::post('/table-content', 'PostsController@tableContent')->name('admin.posts.table_content');
     });
     Route::prefix('/post-categories')->group(function() {

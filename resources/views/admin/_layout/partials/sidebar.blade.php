@@ -27,6 +27,8 @@
                             </ul>
                         </div>
                     </li>
+                    @if(\Auth::user()->role_id==1)
+
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-2" aria-controls="submenu-2"><i class="far fa-comments"></i>@lang('Comments')</a>
                         <div id="submenu-2" class="collapse submenu" style="">
@@ -35,10 +37,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('admin.comments.index')}}">@lang('Comments list')</a>
                                 </li>
- 
+
                             </ul>
                         </div>
                     </li>
+
+
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-3" aria-controls="submenu-3"><i class="fas fa-fw fa-chart-pie"></i>@lang('Post Categories')</a>
                         <div id="submenu-3" class="collapse submenu" style="">
@@ -49,10 +53,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('admin.post_categories.add')}}">@lang('Add new category')</a>
                                 </li>
-                                
+
                             </ul>
                         </div>
                     </li>
+                    @endif
                     <li class="nav-item ">
                         <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-4" aria-controls="submenu-4"><i class="fas fa-hashtag"></i>@lang('Post tags')</a>
                         <div id="submenu-4" class="collapse submenu" style="">
@@ -63,10 +68,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('admin.post_tags.add')}}">@lang('Add new tag')</a>
                                 </li>
-      
+
                             </ul>
                         </div>
                     </li>
+                    @if(\Auth::user()->role_id==1 || \Auth::user()->role_id==2)
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-5" aria-controls="submenu-5"><i class="fas fa-fw fa-table"></i>@lang('Slider items')</a>
                         <div id="submenu-5" class="collapse submenu" style="">
@@ -80,20 +86,23 @@
                             </ul>
                         </div>
                     </li>
+                    @endif
+                    @if(\Auth::user()->role_id==1 || \Auth::user()->role_id==2)
+
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="far fa-user"></i>@lang('Users')</a>
+                        <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="far fa-user"></i>@lang('Authors')</a>
                         <div id="submenu-6" class="collapse submenu" style="">
                             <ul class="nav flex-column">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.authors.index')}}">@lang('Users list')</a>
+                                    <a class="nav-link" href="{{ route('admin.authors.index')}}">@lang('Authors list')</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="pages/data-tables.html">@lang('Add new user')</a>
+                                    <a class="nav-link" href="{{ route('admin.authors.add')}}">@lang('Add new author')</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
- 
+                    @endif
                 </ul>
             </div>
         </nav>

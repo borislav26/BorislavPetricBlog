@@ -34,6 +34,7 @@ class ContactController extends Controller {
             'name'=>['required','string','min:3'],
             'email'=>['required','email'],
             'email_content'=>['required','string','min:10'],
+            'g-recaptcha-response' => 'recaptcha'
         ]);
 
         \Mail::to('borislavpetric66@gmail.com')->send(new SendMessage($formData['name'],$formData['email'],$formData['email_content']));

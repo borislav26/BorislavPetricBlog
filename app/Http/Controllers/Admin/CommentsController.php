@@ -9,6 +9,9 @@ use App\Models\Comment;
 class CommentsController extends Controller {
 
     public function index() {
+        if (\Auth::user()->role_id != 1) {
+            return redirect()->route('admin.index.index');
+        }
         $comments = Comment::query()
                 ->with(['post'])
                 ->orderBy('created_at', 'desc')
@@ -19,6 +22,9 @@ class CommentsController extends Controller {
     }
 
     public function enable(Request $request) {
+        if (\Auth::user()->role_id != 1) {
+            return redirect()->route('admin.index.index');
+        }
         $formData = $request->validate([
             'comment_id' => ['required', 'numeric', 'exists:comments,id']
         ]);
@@ -42,25 +48,28 @@ class CommentsController extends Controller {
     }
 
     public function tableContent() {
+        if (\Auth::user()->role_id != 1) {
+            return redirect()->route('admin.index.index');
+        }
         $query = Comment::query();
         $dataTable = \DataTables::of($query);
 
         $dataTable->addColumn('author', function($comment) {
-            return $comment->name_of_visitor;
-        })->addColumn('email', function($comment) {
-            return $comment->email_of_visitor;
-        })->addColumn('content', function($comment) {
-            return $comment->content;
-        })->addColumn('post_info', function($comment) {
-            return view('admin.comments.partials.post_info',[
-                'comment'=>$comment
-            ]);
-        })->addColumn('actions', function($comment) {
-            return view('admin.comments.partials.actions',[
-                'comment'=>$comment
-            ]);
-        })
-        ->rawColumns(['post_info','actions']);
+                    return $comment->name_of_visitor;
+                })->addColumn('email', function($comment) {
+                    return $comment->email_of_visitor;
+                })->addColumn('content', function($comment) {
+                    return $comment->content;
+                })->addColumn('post_info', function($comment) {
+                    return view('admin.comments.partials.post_info', [
+                        'comment' => $comment
+                    ]);
+                })->addColumn('actions', function($comment) {
+                    return view('admin.comments.partials.actions', [
+                        'comment' => $comment
+                    ]);
+                })
+                ->rawColumns(['post_info', 'actions']);
 
         return $dataTable->make(true);
     }

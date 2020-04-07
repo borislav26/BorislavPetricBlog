@@ -5,7 +5,7 @@
 
 <div id="index-slider" class="owl-carousel">
     @foreach($sliderItems as $sliderItem)
-    <section style="background: url('{{$sliderItem->image}}'); background-size: cover; background-position: center center" class="hero">
+    <section style="background: url('{{$sliderItem->getPhotoUrl()}}'); background-size: cover; background-position: center center" class="hero">
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">
@@ -44,7 +44,7 @@
                         <header class="post-header">
                             @if($post->post_category_id!=0)
                             <div class="category">
-                                <a href="{{ route('front.posts.category',['category'=>$post->category->id])}}">
+                                <a href="{{ route('front.posts.category',['category'=>$post->post_category_id])}}">
                                     {{ $post->category->name}}
                                 </a>
                             </div>
@@ -60,7 +60,7 @@
                                 <h2 class="h4">{{ $post->title}}</h2></a>
                         </header>
                         <p>{{ $post->shortDescription}}</p>
-                        <footer class="post-footer d-flex align-items-center"><a href="{{ route('front.posts.author',['author'=>$post->author->id])}}" class="author d-flex align-items-center flex-wrap">
+                        <footer class="post-footer d-flex align-items-center"><a href="{{ route('front.posts.author',['author'=>$post->post_author_id])}}" class="author d-flex align-items-center flex-wrap">
                                 <div class="avatar"><img src="{{$post->image}}" alt="..." class="img-fluid"></div>
                                 <div class="title"><span>{{ $post->author->name}}</span></div></a>
                             <div class="date"><i class="icon-clock"></i>{{$post->goodFormatedDate()}}</div>
@@ -110,7 +110,20 @@
                     <div class="post-details">
                         <div class="post-meta d-flex justify-content-between">
                             <div class="date">{{ $post->giveMeHumanFriendlyDate()}}</div>
-                            <div class="category"><a href="{{ route('front.posts.category',['category'=>$post->category->id])}}">{{ $post->category->name}}</a></div>
+                            @if($post->post_category_id!=0)
+                            <div class="category">
+                                <a href="{{ route('front.posts.category',['category'=>$post->post_category_id])}}">
+                                    {{ $post->category->name}}
+                                </a>
+                            </div>
+                            @endif
+                            @if($post->post_category_id==0)
+                            <div class="category">
+                                <a href="">
+                                    @lang('Uncategorized')
+                                </a>
+                            </div>
+                            @endif
                         </div><a href="{{ route('front.posts.single',['post'=>$post->id])}}">
                             <h3 class="h4">{{$post->title}}</h3></a>
                         <p class="text-muted">{{$post->shortDescription}}</p>

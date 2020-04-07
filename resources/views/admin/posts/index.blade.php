@@ -162,6 +162,61 @@
     <!-- end footer -->
     <!-- ============================================================== -->
 </div>
+<!--Modal: modalDiscount-->
+<form  action="{{route('admin.posts.delete')}}" 
+       method="POST"
+       class="modal fade right" id="modalDiscount" tabindex="-1" role="dialog" aria-labelledby="fullHeightModalRight"
+       aria-hidden="true" data-backdrop="true">
+    @csrf
+    <div class="modal-dialog modal-side modal-bottom-right modal-notify modal-danger" role="document">
+        <input type="hidden" name="post_id" value="">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading">@lang('Delete action')
+                    <strong></strong>
+                </p>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+
+            <!--Body-->
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-3">
+                        <p></p>
+                        <p class="text-center">
+                            <i class="fas fa-trash fa-4x"></i>
+                        </p>
+                    </div>
+
+                    <div class="col-9">
+                        <p>@lang('Are you shure want delete category with name:')</p>
+                        <h3>
+                            <strong id="post_title"></strong>
+                        </h3>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!--Footer-->
+            <div class="modal-footer flex-center">
+                <button type="submit" class="btn btn-danger">Delete
+                    <i class="fas fa-trash ml-1 white-text"></i>
+                </button>
+                <button type="button" class="btn btn-outline-danger waves-effect" data-dismiss="modal">No, thanks</button>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</form>
+<!--Modal: modalDiscount-->
 @endsection
 @push('footer_javascript')
 <script>
@@ -197,6 +252,13 @@
             {"name": "actions", "data": "actions", "className": "text-center"}
 
         ]
+    });
+        $('#posts-table-field [data-action="delete"]').on('click', function () {
+        let postId = $(this).attr('data-id');
+        let postTitle = $(this).attr('data-name');
+
+        $('#modalDiscount #category_name').text(postTitle);
+        $('#modalDiscount [name="post_id"]').val(postId);
     });
 </script>
 @endpush

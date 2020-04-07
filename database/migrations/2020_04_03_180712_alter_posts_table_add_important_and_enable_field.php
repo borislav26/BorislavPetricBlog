@@ -14,7 +14,7 @@ class AlterPostsTableAddImportantAndEnableField extends Migration
     public function up()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->integer('enable')->default(0);
+            $table->integer('enable')->default(1);
             
         });
     }

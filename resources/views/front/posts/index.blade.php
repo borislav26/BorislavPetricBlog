@@ -46,7 +46,7 @@
                 <!-- Pagination -->
                 <nav aria-label="Page navigation example">
 
-                    {{ $posts->links() }}
+                    @include('front.posts.partials.pagination', ['paginator' => $posts])
 
                 </nav>
             </div>

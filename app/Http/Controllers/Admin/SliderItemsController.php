@@ -10,6 +10,9 @@ use Intervention\Image\Image;
 class SliderItemsController extends Controller {
 
     public function index() {
+        if (\Auth::user()->role_id == 3) {
+            return redirect()->route('admin.index.index');
+        }
         $sliderItems = SliderItem::all();
         return view('admin.slider_items.index', [
             'sliderItems' => $sliderItems
@@ -17,15 +20,21 @@ class SliderItemsController extends Controller {
     }
 
     public function add() {
+        if (\Auth::user()->role_id == 3) {
+            return redirect()->route('admin.index.index');
+        }
         return view('admin.slider_items.add');
     }
 
     public function insert(Request $request) {
+        if (\Auth::user()->role_id == 3) {
+            return redirect()->route('admin.index.index');
+        }
         $formData = $request->validate([
             'title' => ['required', 'string', 'max:30'],
             'button_name' => ['required', 'string', 'max:20'],
             'url' => ['required', 'string'],
-            'image' => ['required', 'file', 'image', 'max:51200'],
+            'image' => ['nullable', 'file', 'image', 'max:51200'],
         ]);
 
         $sliderItem = new SliderItem();
@@ -59,6 +68,9 @@ class SliderItemsController extends Controller {
     }
 
     public function changeOrder(Request $request) {
+        if (\Auth::user()->role_id == 3) {
+            return redirect()->route('admin.index.index');
+        }
         $formData = $request->validate([
             'orders' => ['required', 'string']
         ]);
@@ -73,18 +85,23 @@ class SliderItemsController extends Controller {
     }
 
     public function edit(SliderItem $sliderItem) {
-
+        if (\Auth::user()->role_id == 3) {
+            return redirect()->route('admin.index.index');
+        }
         return view('admin.slider_items.edit', [
             'sliderItem' => $sliderItem
         ]);
     }
 
     public function update(Request $request, SliderItem $sliderItem) {
+        if (\Auth::user()->role_id == 3) {
+            return redirect()->route('admin.index.index');
+        }
         $formData = $request->validate([
             'title' => ['required', 'string', 'max:30'],
             'button_name' => ['required', 'string', 'max:20'],
             'url' => ['required', 'string'],
-            'image' => ['required', 'file', 'image', 'max:51200'],
+            'image' => ['nullable', 'file', 'image', 'max:51200'],
         ]);
 
 
@@ -116,13 +133,16 @@ class SliderItemsController extends Controller {
     }
 
     public function delete(Request $request) {
+        if (\Auth::user()->role_id == 3) {
+            return redirect()->route('admin.index.index');
+        }
         $formData = $request->validate([
             'slider_id' => ['required', 'numeric', 'exists:slider_items,id']
         ]);
 
         $item = SliderItem::findOrFail($formData['slider_id']);
 
-        
+
         $item->delete();
 
         return redirect()->route('admin.slider_items.index');
