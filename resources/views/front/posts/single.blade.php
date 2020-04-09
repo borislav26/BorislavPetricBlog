@@ -12,8 +12,8 @@
                         <div class="post-meta d-flex justify-content-between">
                             @if($post->post_category_id!=0)
                             <div class="category">
-                                <a href="{{ route('front.posts.category',['category'=>$post->category->id])}}">
-                                    {{ $post->category->name}}
+                                <a href="{{ route('front.posts.category',['category'=>$post->post_category_id,'name'=>\Str::slug(optional($post->category)->name),'description'=>\Str::slug(optional($post->category)->description)])}}">
+                                    {{ optional($post->category)->name}}
                                 </a>
                             </div>
                             @endif
@@ -26,27 +26,27 @@
                             @endif
                         </div>
                         <h1>{{$post->title}}<a href="#"><i class="fa fa-bookmark-o"></i></a></h1>
-                        <div class="post-footer d-flex align-items-center flex-column flex-sm-row"><a href="{{  route('front.posts.author',['author'=>$post->author->id])}}" class="author d-flex align-items-center flex-wrap">
-                                <div class="avatar"><img src="{{ $post->image}}" alt="..." class="img-fluid"></div>
-                                <div class="title"><span>{{ $post->author->name}}</span></div></a>
+                        <div class="post-footer d-flex align-items-center flex-column flex-sm-row"><a href="{{  route('front.posts.author',['author'=>$post->post_author_id,'name'=>\Str::slug(optional($post->author)->name)])}}" class="author d-flex align-items-center flex-wrap">
+                                <div class="avatar"><img src="{{ $post->getPhotoUrl()}}" alt="..." class="img-fluid"></div>
+                                <div class="title"><span>{{ optional($post->author)->name}}</span></div></a>
                             <div class="d-flex align-items-center flex-wrap">       
                                 <div class="date"><i class="icon-clock"></i> {{ $post->goodFormatedDate()}}</div>
                                 <div class="views"><i class="icon-eye"></i> {{ $post->reviews}}</div>
-                                <div class="comments meta-last"><a href="#post-comments"><i class="icon-comment"></i>{{ $post->comments()->count() }}</a></div>
+                                <div class="comments meta-last"><a href="#post-comments"><i class="icon-comment"></i>{{ optional($post->comments())->count() }}</a></div>
                             </div>
                         </div>
                         <div class="post-body">
                             {!! $post->mainContent !!}
                         </div>
                         <div class="post-tags">
-                            @foreach($post->tags as $tag)
+                            @foreach(optional($post->tags) as $tag)
                             <a href="{{ route('front.posts.tag',['tag'=>$tag->id])}}" class="tag">#{{ $tag->name}}</a>
                             @endforeach
 
                         </div>
                         <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
                             @if($post->id!=1)
-                            <a href="{{ route('front.posts.single',['post'=>$post->giveMePreviousPost()->id,'postName'=>\Str::slug($post->giveMeNextPost()->title)])}}" class="prev-post text-left d-flex align-items-center">
+                            <a href="{{ route('front.posts.single',['post'=>$post->giveMePreviousPost()->id,'name'=>\Str::slug($post->giveMePreviousPost()->title)])}}" class="prev-post text-left d-flex align-items-center">
                                 <div class="icon prev">
                                     <i class="fa fa-angle-left"></i>
                                 </div>
@@ -60,7 +60,7 @@
                             </a>
                             @endif
                             @if($post->id!=$lastPost->id)
-                            <a href="{{ route('front.posts.single',['post'=>$post->giveMeNextPost()->id,'postName'=>\Str::slug($post->giveMeNextPost()->title)])}}" class="next-post text-right d-flex align-items-center justify-content-end">
+                            <a href="{{ route('front.posts.single',['post'=>$post->giveMeNextPost()->id,'name'=>\Str::slug($post->giveMeNextPost()->title)])}}" class="next-post text-right d-flex align-items-center justify-content-end">
                                 <div class="text">
                                     <strong class="text-primary">
                                         Next Post 
@@ -114,35 +114,40 @@
     </div>
 </div>
 @endsection
+@push('head_css')
+<link href="{{url('/themes/front/plugins/overhang.js-master/dist/overhang.min.css')}}" rel="stylesheet" type="text/css"/>
+@endpush
+@push('footer_javascript')
+<script src="{{url('/themes/front/plugins/overhang.js-master/dist/overhang.min.js')}}" type="text/javascript"></script>
+@endpush
 @push('footer_javascript')
 <script>
-    function incremebtViews() {
+   
+    function incrementViews() {
         $.ajax({
-            "url": "{{ route('front.posts.increment_views')}}",
+            "url": "{{ route('front.posts.increment_views') }}",
             "type": "post",
             "data": {
                 'post_id': "{{ $post->id}}",
                 '_token': "{{ csrf_token()}}"
             }
         }).done(function (response) {
-            
+ 
         }).fail(function () {
 
         });
     }
     function loadComments() {
-        let postId = "{{ $post->id}}";
+
         $.ajax({
             "url": "{{route('front.posts.comments',['post'=>$post->id])}}",
             "type": "GET",
-            "data": {
 
-            },
             "error": function (ts) {
-                alert(ts.responseText)
+                alert(ts.responseText);
             }
         }).done(function (response) {
-            //alert(response);
+
             console.log('sve je dobro odradjeno');
             $('#post-comments').html(response);
         }).fail(function (response) {
@@ -150,7 +155,7 @@
         });
     }
     loadComments();
-    incremebtViews();
+    incrementViews();
     $('#comment_field [data-action="leave-comment"]').on('click', function (e) {
         e.preventDefault();
         let postId = "{{ $post->id}}";
@@ -168,10 +173,16 @@
                 "_token": "{{ csrf_token()}}"
             },
             "error": function (ts) {
-                alert(ts.responseText)
+
             }
         }).done(function (response) {
-            loadComments();
+                $('body').overhang({
+                    "type":"success",
+                    "message":response.success_message,
+                    "closeConfirm":true,
+                    "duration":3,
+                    "overlay":true
+                });
             console.log('dobro je sve odradjeno');
         }).fail(function (response) {
             alert(reponse);

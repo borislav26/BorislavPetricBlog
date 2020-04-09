@@ -8,6 +8,8 @@ use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\PostTags;
 use Illuminate\Validation\Rule;
+use App\User;
+use App\Models\Comment;
 
 class PostsController extends Controller {
 
@@ -18,8 +20,14 @@ class PostsController extends Controller {
             $posts->where('post_author_id', \Auth::user()->id);
         }
         $posts->get();
+        $tags = PostTags::all();
+        $categories = PostCategory::all();
+        $authors = User::all();
         return view('admin.posts.index', [
-            'posts' => $posts
+            'posts' => $posts,
+            'tags' => $tags,
+            'categories' => $categories,
+            'authors' => $authors
         ]);
     }
 
@@ -68,26 +76,25 @@ class PostsController extends Controller {
         $post->fill($formData);
 
         $post->save();
-        
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $fileName = $post->id . '_' . $file->getClientOriginalName();
 
-            $file->move(public_path('/storage/posts/', $fileName));
+            $file->move(public_path('/storage/posts/'), $fileName);
 
 
             $post->image = $fileName;
 
             $post->save();
 
-            \Image::make(public_path('/storage/posts/', $post->image))
+            \Image::make(public_path('/storage/posts/' . $post->image))
                     ->fit(640, 426)
-                    ->save();
-            \Image::make(public_path('/storage/posts/thumbs/', $post->image))
-                    ->fit(256, 256)
-                    ->save();
+                    ->save(public_path('/storage/posts/thumbs/' . $post->image));
         }
-
+        session()->flash(
+            'session_message','You have added new post successfully!'
+        );
         return redirect()->route('admin.posts.index');
     }
 
@@ -114,27 +121,27 @@ class PostsController extends Controller {
 
         $post->fill($formData);
         if ($request->hasFile('image')) {
+            $post->deletePhoto();
+            $post->deleteThumbPhoto();
             $file = $request->file('image');
             $fileName = $post->id . '_' . $file->getClientOriginalName();
 
-            $file->move(public_path('/storage/posts/', $fileName));
+            $file->move(public_path('/storage/posts/'), $fileName);
 
 
             $post->image = $fileName;
 
             $post->save();
 
-            \Image::make(public_path('/storage/posts/', $post->image))
+            \Image::make(public_path('/storage/posts/' . $post->image))
                     ->fit(640, 426)
-                    ->save();
-
-            \Image::make(public_path('/storage/posts/thumbs/', $post->image))
-                    ->fit(256, 256)
-                    ->save();
+                    ->save(public_path('/storage/posts/thumbs/' . $post->image));
         }
 
         $post->save();
-
+        session()->flash(
+            'session_message','You have updated post successfully!'
+        );
         return redirect()->route('admin.posts.index');
     }
 
@@ -145,16 +152,34 @@ class PostsController extends Controller {
 
         $post = Post::findOrFail($formData['post_id']);
 
-        if (\Auth::user()->id != $post->post_author_id) {
+        if (\Auth::user()->id != $post->post_author_id && \Auth::user()->role_id != 1) {
             return redirect()->route('admin.index.index');
         }
+        $post->deletePhoto();
+        $post->deleteThumbPhoto();
         $post->delete();
-
-        return redirect()->route('admin.posts.index');
+        Comment::query()
+                ->where('post_id', $post->id)
+                ->delete();
+        return response()->json([
+                    'success_message' => 'You have deleted post successfully'
+        ]);
     }
 
-    public function tableContent() {
-        $query = Post::query();
+    public function tableContent(Request $request) {
+        $formData = $request->validate([
+            'title' => ['nullable', 'string'],
+            'post_category' => ['nullable', 'string'],
+            'post_autor' => ['nullable', 'string'],
+            'enable' => ['nullable', 'numeric', 'in:0,1'],
+            'important' => ['nullable', 'numeric', 'in:0,1'],
+            'tag_id' => ['nullable', 'array']
+        ]);
+        $query = Post::query()
+                ->with(['author', 'category', 'tags'])
+                ->join('post_categories', 'posts.post_category_id', '=', 'post_categories.id')
+                ->join('users', 'posts.post_author_id', '=', 'users.id')
+                ->select(['posts.*', 'post_categories.name AS category_name', 'users.name AS author_name']);
         if (\Auth::user()->role_id != 1) {
             $query->where('post_author_id', \Auth::user()->id);
         }
@@ -186,7 +211,19 @@ class PostsController extends Controller {
                         'post' => $post
                     ]);
                 })
-                ->rawColumns(['image', 'actions', 'enable', 'important', 'category']);
+                ->rawColumns(['image', 'actions', 'enable', 'important', 'category'])
+                ->filter(function($query) use ($request) {
+                    if ($request->has('search') && is_array($request->get('search')) && isset($request->get('search')['value'])) {
+                        $valueFromSearchInput = $request->get('search')['value'];
+                        $query->where(function($query) use ($valueFromSearchInput) {
+                            $query->orWhere('enable', $valueFromSearchInput)
+                            ->orWhere('status_important', $valueFromSearchInput)
+                            ->orWhere('posts.title', 'LIKE', '%' . $valueFromSearchInput . '%')
+                            ->orWhere('post_categories.name', 'LIKE', '%' . $valueFromSearchInput . '%')
+                            ->orWhere('users.name', 'LIKE', '%' . $valueFromSearchInput . '%');
+                        });
+                    }
+                });
 
         return $dataTable->make(true);
     }

@@ -22,12 +22,12 @@ Route::namespace('Front')->prefix('/')->group(function() {
 
     Route::prefix('/posts')->group(function() {
         Route::get('/', 'PostsController@index')->name('front.posts.index');
-        Route::get('/single/{post}/{postName?}', 'PostsController@single')->name('front.posts.single');
+        Route::get('/{post}/{name?}', 'PostsController@single')->name('front.posts.single');
         Route::get('/comments-content/{post}', 'PostsController@comments')->name('front.posts.comments');
-        Route::get('/category/{category}', 'PostsController@category')->name('front.posts.category');
+        Route::get('/category/{category}/{name?}/{description?}', 'PostsController@category')->name('front.posts.category');
         Route::get('/search', 'PostsController@search')->name('front.posts.search');
-        Route::get('/tag/{tag}', 'PostsController@tag')->name('front.posts.tag');
-        Route::get('/author/{author}', 'PostsController@author')->name('front.posts.author');
+        Route::get('/tag/{tag}/{name?}', 'PostsController@tag')->name('front.posts.tag');
+        Route::get('/author/{author}/{name?}', 'PostsController@author')->name('front.posts.author');
         Route::post('/leave-comment', 'PostsController@leaveComment')->name('front.posts.leave_comment');
         Route::post('/increment-views', 'PostsController@incrementViews')->name('front.posts.increment_views');
     });
@@ -67,6 +67,7 @@ Route::middleware('auth')->namespace('Admin')->prefix('/admin')->group(function(
     Route::prefix('/comments')->group(function() {
         Route::get('/', 'CommentsController@index')->name('admin.comments.index');
         Route::post('/enable', 'CommentsController@enable')->name('admin.comments.enable');
+        Route::post('/disable', 'CommentsController@disable')->name('admin.comments.disable');
         Route::post('/table-content', 'CommentsController@tableContent')->name('admin.comments.table_content');
     });
     Route::prefix('/slider-items')->group(function() {
@@ -77,6 +78,7 @@ Route::middleware('auth')->namespace('Admin')->prefix('/admin')->group(function(
         Route::post('/update/{sliderItem}', 'SliderItemsController@update')->name('admin.slider_items.update');
         Route::post('/delete', 'SliderItemsController@delete')->name('admin.slider_items.delete');
         Route::post('/change-order', 'SliderItemsController@changeOrder')->name('admin.slider_items.change_order');
+        Route::get('/table-content', 'SliderItemsController@tableContent')->name('admin.slider_items.table_content');
     });
     Route::prefix('/authors')->group(function() {
         Route::get('/', 'UsersController@index')->name('admin.authors.index');
@@ -84,7 +86,10 @@ Route::middleware('auth')->namespace('Admin')->prefix('/admin')->group(function(
         Route::get('/edit/{author}', 'UsersController@edit')->name('admin.authors.edit');
         Route::post('/insert', 'UsersController@insert')->name('admin.authors.insert');
         Route::post('/update/{author}', 'UsersController@update')->name('admin.authors.update');
+        Route::post('/delete', 'UsersController@delete')->name('admin.authors.delete');
         Route::post('/table-content', 'UsersController@tableContent')->name('admin.authors.table_content');
+        Route::post('/ban', 'UsersController@ban')->name('admin.authors.ban');
+        Route::post('/not-ban', 'UsersController@notBan')->name('admin.authors.not_ban');
     });
     Route::prefix('/user-profile')->group(function() {
         Route::get('/{userName?}', 'UserProfileController@index')->name('admin.user_profile.index');

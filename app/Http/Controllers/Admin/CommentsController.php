@@ -21,6 +21,24 @@ class CommentsController extends Controller {
         ]);
     }
 
+    public function disable(Request $request) {
+        if (\Auth::user()->role_id != 1) {
+            return redirect()->route('admin.index.index');
+        }
+        $formData = $request->validate([
+            'comment_id' => ['required', 'numeric', 'exists:comments,id']
+        ]);
+
+        $comment = Comment::findOrFail($formData['comment_id']);
+
+
+        $comment->enable = 0;
+        $comment->save();
+        return response()->json([
+                    'success_message' => 'The comment has been disabled'
+        ]);
+    }
+
     public function enable(Request $request) {
         if (\Auth::user()->role_id != 1) {
             return redirect()->route('admin.index.index');
@@ -32,15 +50,7 @@ class CommentsController extends Controller {
         $comment = Comment::findOrFail($formData['comment_id']);
 
 
-        if ($comment->enable == 0) {
-            $comment->enable = 1;
-            $comment->save();
-            return response()->json([
-                        'success_message' => 'The comment has been enabled'
-            ]);
-        }
-
-        $comment->enable = 0;
+        $comment->enable = 1;
         $comment->save();
         return response()->json([
                     'success_message' => 'The comment has been disabled'

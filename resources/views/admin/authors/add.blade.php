@@ -32,7 +32,7 @@
                 <div class="card">
 
                     <div class="card-body">
-                        <form action="{{ route('admin.posts.insert')}}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('admin.authors.insert')}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="name" class="col-form-label">@lang('Name')</label>

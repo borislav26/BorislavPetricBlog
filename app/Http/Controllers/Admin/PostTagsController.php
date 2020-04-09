@@ -32,7 +32,9 @@ class PostTagsController extends Controller {
 
 
         $tag->save();
-
+        session()->flash(
+            'session_message' ,'You have added new tag successfully!'
+        );
         return redirect()->route('admin.post_tags.index');
     }
 
@@ -53,7 +55,9 @@ class PostTagsController extends Controller {
 
         $tag->save();
 
-
+        session()->flash(
+            'session_message','You have updated tag successfully!'
+        );
         return redirect()->route('admin.post_tags.index');
     }
 
@@ -67,7 +71,9 @@ class PostTagsController extends Controller {
         $tag->posts()->sync([]);
         $tag->delete();
 
-        return redirect()->route('admin.post_tags.index');
+        return response()->json([
+            'success_message'=>'You have deleted tag successfully!'
+        ]);
     }
 
     public function tableContent() {
@@ -75,11 +81,11 @@ class PostTagsController extends Controller {
         $dataTable = \DataTables::of($query);
 
         $dataTable->addColumn('actions', function($tag) {
-            return view('admin.post_tags.partials.actions',[
-                'tag'=>$tag
-            ]);
-        })
-        ->rawColumns(['actions']);
+                    return view('admin.post_tags.partials.actions', [
+                        'tag' => $tag
+                    ]);
+                })
+                ->rawColumns(['actions']);
 
         return $dataTable->make(true);
     }

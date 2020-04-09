@@ -127,7 +127,59 @@
             </div>
         </div>
 
+        <form  action="{{route('admin.post_tags.delete')}}" 
+               method="POST"
+               class="modal fade right" id="modalDiscount" tabindex="-1" role="dialog" aria-labelledby="fullHeightModalRight"
+               aria-hidden="true" data-backdrop="true">
+            @csrf
+            <div class="modal-dialog modal-side modal-bottom-right modal-notify modal-danger" role="document">
+                <input type="hidden" name="author_id" value="">
+                <!--Content-->
+                <div class="modal-content">
+                    <!--Header-->
+                    <div class="modal-header">
+                        <p class="heading">@lang('Delete action')
+                            <strong></strong>
+                        </p>
 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="white-text">&times;</span>
+                        </button>
+                    </div>
+
+                    <!--Body-->
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-3">
+                                <p></p>
+                                <p class="text-center">
+                                    <i class="fas fa-trash fa-4x"></i>
+                                </p>
+                            </div>
+
+                            <div class="col-9">
+                                <p>@lang('Are you shure want delete author with name:')</p>
+                                <h3>
+                                    <strong id="author_name"></strong>
+                                </h3>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Footer-->
+                    <div class="modal-footer flex-center">
+                        <button type="submit" class="btn btn-danger">Delete
+                            <i class="fas fa-trash ml-1 white-text"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger waves-effect" data-dismiss="modal">No, thanks</button>
+                    </div>
+                </div>
+                <!--/.Content-->
+            </div>
+        </form>
     </div>
     <!-- ============================================================== -->
     <!-- footer -->
@@ -180,6 +232,82 @@
             {"name": "actions", "data": "actions", "className": "text-center", "orderable": false, "searchable": false}
 
         ]
+    });
+    $('#users-table').on('click', '[data-action="delete"]', function () {
+        let authorId = $(this).attr('data-id');
+        let authorName = $(this).attr('data-name');
+
+        $('#modalDiscount #author_name').text(authorName);
+        $('#modalDiscount [name="author_id"]').val(authorId);
+    });
+    $('#modalDiscount').on('submit', function (e) {
+        e.preventDefault();
+        $(this).modal('hide');
+        $.ajax({
+            "url": "{{ route('admin.authors.delete')}}",
+            "type": "post",
+            "data": $(this).serialize(),
+            "error": function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
+            }
+        }).done(function (response) {
+            $.amaran({
+                'message': response.success_message,
+                'position': 'top right',
+                'inEffect': 'slideLeft',
+                'cssanimationIn': 'boundeInDown',
+                'cssanimationOut': 'zoomOutUp'
+            });
+            contentOfDataTables.ajax.reload(null, false);
+        }).fail(function () {
+            alert('negde je doslo do greske');
+        });
+    });
+    $('#users-table').on('click', '[data-action="ban"]', function (e) {
+        e.stopPropagation();
+        let authorId = $(this).attr('data-id');
+        let checked = $(this).attr('data-value');
+        if (checked) {
+            $.ajax({
+                "url": "{{ route('admin.authors.ban')}}",
+                "type": "POST",
+                "data": {
+                    "author_id": authorId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+
+                contentOfDataTables.ajax.reload(null, false);
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+        if (!checked) {
+            $.ajax({
+                "url": "{{ route('admin.authors.not_ban')}}",
+                "type": "POST",
+                "data": {
+                    "author_id": authorId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+
+                contentOfDataTables.ajax.reload(null, false);
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+
+
     });
 </script>
 @endpush

@@ -7,8 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Post;
 use App\Models\UserRole;
-class User extends Authenticatable
-{
+
+class User extends Authenticatable {
+
     use Notifiable;
 
     /**
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','phone_number'
+        'name', 'email', 'password', 'phone_number'
     ];
 
     /**
@@ -37,15 +38,23 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
-    public function posts(){
-        
-        return $this->hasMany(Post::class,'post_author_id','id');
+
+    public function posts() {
+
+        return $this->hasMany(Post::class, 'post_author_id', 'id');
     }
-    public function role(){
-        return $this->hasOne(UserRole::class,'id','role_id');
+
+    public function role() {
+        return $this->hasOne(UserRole::class, 'id', 'role_id');
     }
-    
+
+    public function getFrontUrl() {
+        return route('front.posts.author', [
+            'author' => $this->id,
+            'name' => \Str::slug($this->name),
+        ]);
+    }
+
     public function getPhotoUrl() {
         if (!empty($this->image)) {
             return url('/storage/authors/' . $this->image);
@@ -53,6 +62,7 @@ class User extends Authenticatable
 
         return url('https://via.placeholder.com/200');
     }
+
     public function getТhumbPhotoUrl() {
         if (!empty($this->image)) {
             return url('/storage/authors/thumbs/' . $this->image);
@@ -74,6 +84,7 @@ class User extends Authenticatable
         unlink($photoFilePath);
         return $this;
     }
+
     public function deleteThumbPhoto() {
 
         $photoFilePath = public_path('/storage/authors/thumbs/' . $this->image);
@@ -87,4 +98,5 @@ class User extends Authenticatable
         unlink($photoFilePath);
         return $this;
     }
+
 }

@@ -10,7 +10,7 @@ use App\Models\Comment;
 class Post extends Model {
 
     protected $table = 'posts';
-    protected $fillable = ['title', 'shortDescription', 'mainContent', 'status_important', 'enable','post_category_id'];
+    protected $fillable = ['title', 'shortDescription', 'mainContent', 'status_important', 'enable', 'post_category_id'];
 
     public function author() {
         return $this->hasOne(User::class, 'id', 'post_author_id');
@@ -27,6 +27,13 @@ class Post extends Model {
 
     public function comments() {
         return $this->hasMany(Comment::class, 'post_id', 'id');
+    }
+
+    public function getFrontUrl() {
+        return route('front.posts.single', [
+            'post' => $this->id,
+            'name' => \Str::slug($this->title),
+        ]);
     }
 
     public function giveMeHumanFriendlyDate() {
@@ -46,12 +53,19 @@ class Post extends Model {
     }
 
     public function giveMePreviousPost() {
-        $previousPost = Post::find($this->id - 1);
+
+        $previousPost = Post::query()
+                ->where('id', '<', $this->id)
+                ->orderBy('id','desc')
+                ->first();
         return $previousPost;
     }
 
     public function giveMeNextPost() {
-        $nextPost = Post::find($this->id + 1);
+        $nextPost = Post::query()
+                ->where('id', '>', $this->id)
+                ->orderBy('id','asc')
+                ->first();
         return $nextPost;
     }
 
@@ -62,6 +76,7 @@ class Post extends Model {
 
         return url('https://via.placeholder.com/600');
     }
+
     public function getThumbPhotoUrl() {
         if (!empty($this->image)) {
             return url('/storage/posts/thumbs/' . $this->image);

@@ -52,17 +52,18 @@ class SliderItemsController extends Controller {
             $file = $request->file('image');
             $fileName = $sliderItem->id . '_' . $file->getClientOriginalName();
 
-            $file->move(public_path('/storage/slider_items/', $fileName));
+            $file->move(public_path('/storage/slider_items/'), $fileName);
 
             $sliderItem->image = $fileName;
 
             $sliderItem->save();
 
-            \Image::make(public_path('/storage/slider_items/', $sliderItem->image))
-                    ->fit(200, 200)
+            \Image::make(public_path('/storage/slider_items/' . $sliderItem->image))
                     ->save();
         }
-
+        session()->flash(
+                'session_message', 'You have added new slider item successfully!'
+        );
 
         return redirect()->route('admin.slider_items.index');
     }
@@ -80,7 +81,9 @@ class SliderItemsController extends Controller {
             $sliderItem->order = $key + 1;
             $sliderItem->save();
         }
-
+        session()->flash([
+            'session_message' => 'You have change order successfully!'
+        ]);
         return redirect()->back();
     }
 
@@ -114,20 +117,22 @@ class SliderItemsController extends Controller {
 
 
         if ($request->hasFile('image')) {
+            $sliderItem->deletePhoto();
             $file = $request->file('image');
             $fileName = $sliderItem->id . '_' . $file->getClientOriginalName();
 
-            $file->move(public_path('/storage/slider_items/', $fileName));
+            $file->move(public_path('/storage/slider_items/'), $fileName);
 
             $sliderItem->image = $fileName;
 
             $sliderItem->save();
 
-            \Image::make(public_path('/storage/slider_items/', $sliderItem->image))
-                    ->fit(200, 200)
+            \Image::make(public_path('/storage/slider_items/' . $sliderItem->image))
                     ->save();
         }
-
+        session()->flash(
+                'session_message', 'You have updated slider item successfully!'
+        );
 
         return redirect()->route('admin.slider_items.index');
     }
@@ -142,10 +147,22 @@ class SliderItemsController extends Controller {
 
         $item = SliderItem::findOrFail($formData['slider_id']);
 
-
+        $item->deletePhoto();
         $item->delete();
 
-        return redirect()->route('admin.slider_items.index');
+        return response()->json([
+                    'success_message' => 'You have deleted slider item successfully!'
+        ]);
+    }
+
+    public function tableContent() {
+        if (\Auth::user()->role_id != 1) {
+            return redirect()->route('admin.index.index');
+        }
+        $sliderItems = SliderItem::all();
+        return view('admin.slider_items.partials.table_content', [
+            'sliderItems' => $sliderItems
+        ]);
     }
 
 }

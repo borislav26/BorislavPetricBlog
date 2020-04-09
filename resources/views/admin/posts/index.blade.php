@@ -32,6 +32,43 @@
         <!-- end pageheader -->
         <!-- ============================================================== -->
 
+        <div class="card-body">
+            <form id="filter-form">
+                <div class="row">
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" name="title"> 
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 form-group">
+                        <label>Category</label>
+                        <input type="text" class="form-control" name="post_category"> 
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 form-group">
+                        <label>Author</label>
+                        <input type="text" class="form-control" name="post_author"> 
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 form-group">
+                        <label>Enabled</label>
+                        <select type="text" class="form-control" name="enable">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select> 
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 form-group">
+                        <label>Important</label>
+                        <select type="text" class="form-control" name="important">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select> 
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 form-group">
+                        <label>Tag</label>
+                        <input type="text" class="form-control" name="tag_id"> 
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
                 <h5 class="card-header">
@@ -59,60 +96,60 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach($posts as $post)
-                                <tr>
-                                    <td>{{ $post->id }}</td>
-                                    <td>{{ $post->title}}</td>
-                                    <td>
-                                        <img class="mr-3 user-avatar-lg rounded" src="/themes/admin/assets/images/avatar-1.jpg" alt="Generic placeholder image">
-                                    </td>
-                                    <td>
-                                        <div class="text-center">{{ $post->enable}}</div>
-                                        <div class="switch-button switch-button-success">
-                                            <input type="checkbox" checked="" name="enable" id="switch{{$post->id}}" value="{{ $post->enable}}">
-                                            <span>
-                                                <label for="switch{{ $post->id}}"></label>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text-center">
-                                            {{ $post->status_important}}
-                                        </div>
-                                        <div class="switch-button switch-button-success">
-                                            <input type="checkbox" checked="" name="important" id="switch_{{ $post->id}}" value="{{ $post->important}}">
-                                            <span>
-                                                <label for="switch_{{ $post->id}}"></label>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>{{ $post->shortDescription}}</td>
-                                    <td>{{ $post->author->name}}</td>
-                                    <td>
-                                        @if($post->post_category_id==0)
-                                        <span class="text-warning">Uncategorized</span>
-                                        @endif
-                                        @if($post->post_category_id!=0)
-                                        {{ $post->category->name}}
-                                        @endif
-                                    </td>
-                                    <td>{{ $post->comments()->count()}}</td>
-                                    <td>{{ $post->reviews}}</td>
-                                    <td>{{ $post->giveMeHumanFriendlyDate()}}</td>
-                                    <td>
-                                        <div class="btn-group ml-auto">
-                                            <a href="{{ route('admin.posts.edit',['post'=>$post->id])}}"><button class="btn btn-sm btn-outline-light">Edit</button></a>
-                                            <button class="btn btn-sm btn-outline-light">
-                                                <i class="far fa-trash-alt"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-light">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
+                            <tbody id="post-table-field">
+                                <!--                                @foreach($posts as $post)
+                                                                <tr>
+                                                                    <td>{{ $post->id }}</td>
+                                                                    <td>{{ $post->title}}</td>
+                                                                    <td>
+                                                                        <img class="mr-3 user-avatar-lg rounded" src="/themes/admin/assets/images/avatar-1.jpg" alt="Generic placeholder image">
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="text-center">{{ $post->enable}}</div>
+                                                                        <div class="switch-button switch-button-success">
+                                                                            <input type="checkbox" checked="" name="enable" id="switch{{$post->id}}" value="{{ $post->enable}}">
+                                                                            <span>
+                                                                                <label for="switch{{ $post->id}}"></label>
+                                                                            </span>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="text-center">
+                                                                            {{ $post->status_important}}
+                                                                        </div>
+                                                                        <div class="switch-button switch-button-success">
+                                                                            <input type="checkbox" checked="" name="important" id="switch_{{ $post->id}}" value="{{ $post->important}}">
+                                                                            <span>
+                                                                                <label for="switch_{{ $post->id}}"></label>
+                                                                            </span>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>{{ $post->shortDescription}}</td>
+                                                                    <td>{{ $post->author->name}}</td>
+                                                                    <td>
+                                                                        @if($post->post_category_id==0)
+                                                                        <span class="text-warning">Uncategorized</span>
+                                                                        @endif
+                                                                        @if($post->post_category_id!=0)
+                                                                        {{ $post->category->name}}
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>{{ $post->comments()->count()}}</td>
+                                                                    <td>{{ $post->reviews}}</td>
+                                                                    <td>{{ $post->giveMeHumanFriendlyDate()}}</td>
+                                                                    <td>
+                                                                        <div class="btn-group ml-auto">
+                                                                            <a href="{{ route('admin.posts.edit',['post'=>$post->id])}}"><button class="btn btn-sm btn-outline-light">Edit</button></a>
+                                                                            <button class="btn btn-sm btn-outline-light">
+                                                                                <i class="far fa-trash-alt"></i>
+                                                                            </button>
+                                                                            <button class="btn btn-sm btn-outline-light">
+                                                                                <i class="fas fa-eye"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach-->
 
                             </tbody>
                             <tfoot>
@@ -220,6 +257,19 @@
 @endsection
 @push('footer_javascript')
 <script>
+    $('#filter-form').on('submit', function (e) {
+        e.preventDefault();
+        contentOfDataTables.ajax.reload(null, true);
+    });
+    $('#filter-form [name="important"]').on('change', function (e) {
+        $('#filter-form').trigger('submit');
+    });
+    $('#filter-form [name="enable"]').on('change', function (e) {
+        $('#filter-form').trigger('submit');
+    });
+    $('#filter-form [name]').on('keyup', function (e) {
+        $('#filter-form').trigger('submit');
+    });
     let contentOfDataTables = $('#posts-table-field').DataTable({
         "pageLength": 5,
         "lengthMenu": [5, 10, 25, 50, 100, 250],
@@ -229,8 +279,14 @@
         "ajax": {
             "url": "{{ route('admin.posts.table_content')}}",
             "type": "POST",
-            "data": {
-                "_token": "{{ csrf_token()}}"
+            "data": function (dataFromDataTable) {
+                dataFromDataTable['_token'] = "{{ csrf_token() }}";
+                dataFromDataTable['title'] = $('#filter-form [name="title"]').val();
+                dataFromDataTable['post_category'] = $('#filter-form [name="post_category"]').val();
+                dataFromDataTable['post_author'] = $('#filter-form [name="post_author"]').val();
+                dataFromDataTable['enable'] = $('#filter-form [name="enable"]').val();
+                dataFromDataTable['important'] = $('#filter-form [name="important"]').val();
+                dataFromDataTable['tag_id'] = $('#filter-form [name="tag_id"]').val();
             },
 
             "error": function (jqXHR, ajaxOptions, thrownError) {
@@ -253,12 +309,35 @@
 
         ]
     });
-        $('#posts-table-field [data-action="delete"]').on('click', function () {
+    $('#posts-table-field').on('click', '[data-action="delete"]', function () {
         let postId = $(this).attr('data-id');
         let postTitle = $(this).attr('data-name');
-
-        $('#modalDiscount #category_name').text(postTitle);
+        $('#modalDiscount #post_title').text(postTitle);
         $('#modalDiscount [name="post_id"]').val(postId);
+    });
+    $('#modalDiscount').on('submit', function (e) {
+        e.preventDefault();
+        $(this).modal('hide');
+        $.ajax({
+            "url": "{{ route('admin.posts.delete')}}",
+            "type": "post",
+            "data": $(this).serialize(),
+            "error": function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
+            }
+        }).done(function (response) {
+            $.amaran({
+                'message': response.success_message,
+                'position': 'top right',
+                'inEffect': 'slideLeft',
+                'cssanimationIn': 'boundeInDown',
+                'cssanimationOut': 'zoomOutUp'
+            });
+            contentOfDataTables.ajax.reload(null, false);
+        }).fail(function () {
+            alert('negde je doslo do greske');
+        });
     });
 </script>
 @endpush

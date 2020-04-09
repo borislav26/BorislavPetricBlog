@@ -50,7 +50,9 @@ class PostCategoriesController extends Controller {
 
 
         $category->save();
-
+        session()->flash(
+            'session_message','You have added new category successfully!'
+        );
         return redirect()->route('admin.post_categories.index');
     }
 
@@ -69,7 +71,9 @@ class PostCategoriesController extends Controller {
 
         $category->save();
 
-
+        session()->flash(
+            'session_message' ,'You have updated category successfully!'
+        );
         return redirect()->route('admin.post_categories.index');
     }
 
@@ -94,7 +98,9 @@ class PostCategoriesController extends Controller {
                 ->decrement('priority');
         $category->delete();
 
-        return redirect()->route('admin.post_categories.index');
+        return response()->json([
+                    'success_message' => 'You have deleted category successfully!'
+        ]);
     }
 
     public function changePriority(Request $request) {

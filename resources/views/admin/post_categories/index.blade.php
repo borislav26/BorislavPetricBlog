@@ -43,7 +43,7 @@
 
                 <div class="card-body">
                     <div class="table-responsive" id="post-categories-table-field">
-                        <table class="table table-striped table-bordered first">
+<!--                        <table class="table table-striped table-bordered first">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -95,7 +95,7 @@
                                     <th>Actions</th>
                                 </tr>
                             </tfoot>
-                        </table>
+                        </table>-->
                     </div>
                 </div>
             </div>
@@ -192,21 +192,21 @@
 @push('footer_javascript')
 <script src="{{url('/themes/admin/assets/vendor/jquery-ui/jquery-ui.min.js')}}" type="text/javascript"></script>
 <script type="text/javascript">
-//    function loadTableContent() {
-//        $.ajax({
-//            "url": "{{ route('admin.post_categories.table_content')}}",
-//            "type": "get",
-//            "data": {
-//
-//            }
-//        }).done(function (response) {
-//            $('#post-categories-table-field').html(response);
-//
-//        }).fail(function () {
-//
-//        });
-//    }
-//    //loadTableContent();
+    function loadTableContent() {
+        $.ajax({
+            "url": "{{ route('admin.post_categories.table_content')}}",
+            "type": "get",
+            "data": {
+
+            }
+        }).done(function (response) {
+            $('#post-categories-table-field').html(response);
+
+        }).fail(function () {
+
+        });
+    }
+    loadTableContent();
     $('[data-action="show-change-priority-buttons"]').on('click', function () {
         $(this).hide();
         $('#change-priorities-form').show();
@@ -239,23 +239,29 @@
         $('#modalDiscount #category_name').text(categoryName);
         $('#modalDiscount [name="category_id"]').val(categoryId);
     });
-//    $('#modalDiscount').on('submit', function (e) {
-//        e.preventDefault();
-//        $(this).modal('hide');
-//        $.ajax({
-//            "url": "{{ route('admin.post_categories.delete')}}",
-//            "type": "post",
-//            "data": $(this).serialize(),
-//            "error": function (xhr, ajaxOptions, thrownError) {
-//                alert(xhr.status);
-//                alert(thrownError);
-//            }
-//        }).done(function (response) {
-//            
-//            loadTableContent();
-//        }).fail(function () {
-//            alert('negde je doslo do greske');
-//        });
-//    });
+    $('#modalDiscount').on('submit', function (e) {
+        e.preventDefault();
+        $(this).modal('hide');
+        $.ajax({
+            "url": "{{ route('admin.post_categories.delete')}}",
+            "type": "post",
+            "data": $(this).serialize(),
+            "error": function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
+            }
+        }).done(function (response) {
+            $.amaran({
+                'message': response.success_message,
+                'position': 'top right',
+                'inEffect': 'slideLeft',
+                'cssanimationIn': 'boundeInDown',
+                'cssanimationOut': 'zoomOutUp'
+            });
+            loadTableContent();
+        }).fail(function () {
+            alert('negde je doslo do greske');
+        });
+    });
 </script>
 @endpush('footer_javascript')

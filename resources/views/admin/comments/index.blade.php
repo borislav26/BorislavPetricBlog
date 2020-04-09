@@ -240,7 +240,7 @@
 
         ]
     });
-    $('#comment-table-field-body').on('click','[data-action="delete"]', function (e) {
+    $('#comment-table-field-body').on('click', '[data-action="delete"]', function (e) {
         e.stopPropagation();
         let commentId = $(this).attr('data-id');
         $.ajax({
@@ -256,10 +256,55 @@
             }
         }).done(function (response) {
 
-            contentOfDataTables.ajax.reload(null,false);
+            contentOfDataTables.ajax.reload(null, false);
         }).fail(function () {
             alert('negde je doslo do greske');
         });
+    });
+    $('#comments-table-field').on('click', '[data-action="enable"]', function (e) {
+        e.stopPropagation();
+        let commentId = $(this).attr('data-id');
+        let checked = $(this).attr('data-value');
+        if (checked) {
+            $.ajax({
+                "url": "{{ route('admin.comments.disable')}}",
+                "type": "POST",
+                "data": {
+                    "comment_id": commentId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+
+                contentOfDataTables.ajax.reload(null, false);
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+        if (!checked) {
+            $.ajax({
+                "url": "{{ route('admin.comments.enable')}}",
+                "type": "POST",
+                "data": {
+                    "comment_id": commentId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+
+                contentOfDataTables.ajax.reload(null, false);
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+
+
     });
 </script>
 @endpush('footer_javascript')

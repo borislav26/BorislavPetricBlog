@@ -40,35 +40,35 @@ class UsersController extends Controller {
         }
         $formData = $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:40'],
-            'email' => ['required', 'string', 'max:20'],
+            'email' => ['required', 'string'],
             'phone_number' => ['required', 'string', 'max:30'],
             'image' => ['nullable', 'file', 'image', 'max:51200'],
         ]);
 
         $author = new User();
-
+        
         $author->fill($formData);
-
+        
+        $author->password=\Hash::make('trenerka');
         $author->save();
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $fileName = $author->id . '_' . $file->getClientOriginalName();
 
-            $file->move(public_path('/storage/authors/', $fileName));
+            $file->move(public_path('/storage/authors/'), $fileName);
 
             $author->image = $fileName;
 
             $author->save();
 
-            \Image::make(public_path('/storage/authors/', $author->image))
-                    ->fit(200, 200)
-                    ->save();
-            \Image::make(public_path('/storage/authors/thumbs/', $author->image))
+            \Image::make(public_path('/storage/authors/' . $author->image))
                     ->fit(256, 256)
-                    ->save();
+                    ->save(public_path('/storage/authors/thumbs' . $author->image));
         }
-
+        session()->flash(
+            'session_message','You have added new user successfully!'
+        );
         return redirect()->route('admin.authors.index');
     }
 
@@ -90,25 +90,45 @@ class UsersController extends Controller {
         $author->save();
 
         if ($request->hasFile('image')) {
+            $author->deletePhoto();
+            $author->deleteThumbPhoto();
             $file = $request->file('image');
             $fileName = $author->id . '_' . $file->getClientOriginalName();
 
-            $file->move(public_path('/storage/authors/', $fileName));
+            $file->move(public_path('/storage/authors/'), $fileName);
 
 
             $author->image = $fileName;
 
             $author->save();
 
-            \Image::make(public_path('/storage/authors/thumbs/', $author->image))
+            \Image::make(public_path('/storage/authors/' . $author->image))
                     ->fit(256, 256)
-                    ->save();
-            \Image::make(public_path('/storage/authors/', $author->image))
-                    ->fit(300, 300)
-                    ->save();
+                    ->save(public_path('/storage/authors/thumbs' . $author->image));
         }
-
+        session()->flash(
+            'session_message','You have updated user successfully!'
+        );
         return redirect()->route('admin.authors.index');
+    }
+
+    public function delete(Request $request) {
+        $formData = $request->validate([
+            'author_id' => ['required', 'numeric', 'exists:users,id']
+        ]);
+
+        $author = User::findOrFail($formData['author_id']);
+
+        if (\Auth::user()->role_id != 1) {
+            return redirect()->route('admin.index.index');
+        }
+        $author->deletePhoto();
+        $author->deleteThumbPhoto();
+        $author->delete();
+
+        return response()->json([
+            'success_message'=>'You have deleted slider item successfully'
+        ]);
     }
 
     public function tableContent() {
@@ -134,6 +154,42 @@ class UsersController extends Controller {
                 ->rawColumns(['image', 'actions', 'ban']);
 
         return $dataTable->make(true);
+    }
+
+    public function ban(Request $request) {
+        if (\Auth::user()->role_id != 1) {
+            return redirect()->route('admin.index.index');
+        }
+        $formData = $request->validate([
+            'author_id' => ['required', 'numeric', 'exists:users,id']
+        ]);
+
+        $author = User::findOrFail($formData['author_id']);
+
+
+        $author->ban = 0;
+        $author->save();
+        return response()->json([
+                    'success_message' => 'The comment has been disabled'
+        ]);
+    }
+
+    public function notBan(Request $request) {
+        if (\Auth::user()->role_id != 1) {
+            return redirect()->route('admin.index.index');
+        }
+        $formData = $request->validate([
+            'author_id' => ['required', 'numeric', 'exists:users,id']
+        ]);
+
+        $author = User::findOrFail($formData['author_id']);
+
+
+        $author->ban = 1;
+        $author->save();
+        return response()->json([
+                    'success_message' => 'The comment has been disabled'
+        ]);
     }
 
 }

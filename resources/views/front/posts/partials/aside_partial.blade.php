@@ -19,7 +19,7 @@
         </header>
         <div class="blog-posts">
             @foreach($postWithTheMostViews as $post)
-            <a href="{{ route('front.posts.single',['post'=>$post->id])}}">
+            <a href="{{ route('front.posts.single',['post'=>$post->id,'name'=>\Str::slug($post->title)])}}">
                 <div class="item d-flex align-items-center">
                     <div class="image"><img src="/themes/front/img/small-thumbnail-1.jpg" alt="..." class="img-fluid"></div>
                     <div class="title"><strong>{{ $post->title}}</strong>
@@ -40,7 +40,7 @@
             <h3 class="h6">Categories</h3>
         </header>
         @foreach($postCategories as $category)
-        <div class="item d-flex justify-content-between"><a href="{{route('front.posts.category',['category'=>$category->id])}}">{{ $category->name}}</a><span>{{ $category->posts_count }}</span></div>
+        <div class="item d-flex justify-content-between"><a href="{{route('front.posts.category',['category'=>$category->id,'name'=>\Str::slug($category->name),'description'=>\Str::slug($category->description)])}}">{{ $category->name}}</a><span>{{ $category->posts_count }}</span></div>
         @endforeach
     </div>
     <!-- Widget [Tags Cloud Widget]-->
@@ -50,7 +50,7 @@
         </header>
         <ul class="list-inline">
              @foreach($postTags as $tag)
-             <li class="list-inline-item"><a href="{{ route('front.posts.tag',['tag'=>$tag->id])}}" class="tag">#{{ $tag->name }}</a></li>
+             <li class="list-inline-item"><a href="{{ route('front.posts.tag',['tag'=>$tag->id,'name'=>\Str::slug($tag->name)])}}" class="tag">#{{ $tag->name }}</a></li>
               @endforeach
         </ul>
     </div>

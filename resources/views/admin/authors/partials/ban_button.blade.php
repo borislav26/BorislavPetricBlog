@@ -8,6 +8,7 @@
         id="switch{{$author->id}}" 
         value="{{ $author->ban}}" 
         data-action="ban"
+        data-value="{{$author->ban}}"
         data-id="{{ $author->id}}"
         >
         <span>

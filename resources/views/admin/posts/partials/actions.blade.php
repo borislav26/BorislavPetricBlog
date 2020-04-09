@@ -10,7 +10,7 @@
         >
         <i class="far fa-trash-alt"></i>
     </button>
-    <a href="{{ route('front.posts.single',['post'=>$post->id])}}">
+    <a href="{{ $post->getFrontUrl()}}">
         <button class="btn btn-sm btn-outline-light">
             <i class="fas fa-eye"></i>
         </button>
