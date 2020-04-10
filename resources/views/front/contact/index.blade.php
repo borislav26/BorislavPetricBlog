@@ -1,5 +1,6 @@
 @extends('front._layout.layout')
 @section('seo_title','Contact Page')
+@section('seo_description','The contact page of Borislav Petric Blog')
 @section('content')
 <!-- Hero Section -->
 <section style="background: url(/themes/front/img/hero.jpg); background-size: cover; background-position: center center; background-attachment: fixed;" 

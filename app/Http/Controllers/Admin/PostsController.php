@@ -12,6 +12,7 @@ use App\User;
 use App\Models\Comment;
 
 define('ADMINISTRATOR', 1);
+
 class PostsController extends Controller {
 
     public function index() {
@@ -182,12 +183,12 @@ class PostsController extends Controller {
             'important' => ['nullable', 'numeric', 'in:0,1'],
             'tag_id' => ['nullable', 'array']
         ]);
-        $query = Post::query();
-//                ->with(['author', 'category', 'tags'])
-//                ->join('post_categories', 'posts.post_category_id', '=', 'post_categories.id')
-//                ->join('users', 'posts.post_author_id', '=', 'users.id')
-//                ->select(['posts.*', 'post_categories.name AS category_name', 'users.name AS author_name'])
-//                ->orderBy('id','desc');
+        $query = Post::query()
+                ->with(['author', 'category', 'tags'])
+                ->leftJoin('post_categories', 'posts.post_category_id', '=', 'post_categories.id')
+                ->join('users', 'posts.post_author_id', '=', 'users.id')
+                ->select(['posts.*', 'post_categories.name AS category_name', 'users.name AS author_name'])
+                ->orderBy('id','desc');
         if (\Auth::user()->role_id != ADMINISTRATOR) {
             $query->where('post_author_id', \Auth::user()->id);
         }
@@ -219,19 +220,19 @@ class PostsController extends Controller {
                         'post' => $post
                     ]);
                 })
-                ->rawColumns(['image', 'actions', 'enable', 'important', 'category']);
-//                ->filter(function($query) use ($request) {
-//                    if ($request->has('search') && is_array($request->get('search')) && isset($request->get('search')['value'])) {
-//                        $valueFromSearchInput = $request->get('search')['value'];
-//                        $query->where(function($query) use ($valueFromSearchInput) {
-//                            $query->orWhere('enable', $valueFromSearchInput)
-//                            ->orWhere('status_important', $valueFromSearchInput)
-//                            ->orWhere('posts.title', 'LIKE', '%' . $valueFromSearchInput . '%')
-//                            ->orWhere('post_categories.name', 'LIKE', '%' . $valueFromSearchInput . '%')
-//                            ->orWhere('users.name', 'LIKE', '%' . $valueFromSearchInput . '%');
-//                        });
-//                    }
-//                });
+                ->rawColumns(['image', 'actions', 'enable', 'important', 'category'])
+                ->filter(function($query) use ($request) {
+                    if ($request->has('search') && is_array($request->get('search')) && isset($request->get('search')['value'])) {
+                        $valueFromSearchInput = $request->get('search')['value'];
+                        $query->where(function($query) use ($valueFromSearchInput) {
+                            $query->orWhere('enable', $valueFromSearchInput)
+                            ->orWhere('status_important', $valueFromSearchInput)
+                            ->orWhere('posts.title', 'LIKE', '%' . $valueFromSearchInput . '%')
+                            ->orWhere('post_categories.name', 'LIKE', '%' . $valueFromSearchInput . '%')
+                            ->orWhere('users.name', 'LIKE', '%' . $valueFromSearchInput . '%');
+                        });
+                    }
+                });
 
         return $dataTable->make(true);
     }

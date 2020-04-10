@@ -1,5 +1,8 @@
 @extends('front._layout.layout')
 @section('seo_title', $post->title)
+@section('seo_description',$post->shortDescription)
+@section('seo_image',$post->getFrontUrl())
+@section('seo_author',$post->author->name)
 @section('content')
 <div class="container">
     <div class="row">
@@ -7,7 +10,7 @@
         <main class="post blog-post col-lg-8"> 
             <div class="container">
                 <div class="post-single">
-                    <div class="post-thumbnail"><img src="{{ $post->image}}" alt="..." class="img-fluid"></div>
+                    <div class="post-thumbnail"><img src="{{ $post->getPhotoUrl()}}" alt="..." class="img-fluid"></div>
                     <div class="post-details">
                         <div class="post-meta d-flex justify-content-between">
                             @if($post->post_category_id!=0)
@@ -27,7 +30,7 @@
                         </div>
                         <h1>{{$post->title}}<a href="#"><i class="fa fa-bookmark-o"></i></a></h1>
                         <div class="post-footer d-flex align-items-center flex-column flex-sm-row"><a href="{{  route('front.posts.author',['author'=>$post->post_author_id,'name'=>\Str::slug(optional($post->author)->name)])}}" class="author d-flex align-items-center flex-wrap">
-                                <div class="avatar"><img src="{{ $post->getPhotoUrl()}}" alt="..." class="img-fluid"></div>
+                                <div class="avatar"><img src="{{ $post->author->getPhotoUrl()}}" alt="..." class="img-fluid"></div>
                                 <div class="title"><span>{{ optional($post->author)->name}}</span></div></a>
                             <div class="d-flex align-items-center flex-wrap">       
                                 <div class="date"><i class="icon-clock"></i> {{ $post->goodFormatedDate()}}</div>

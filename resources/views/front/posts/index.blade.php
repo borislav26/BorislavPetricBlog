@@ -1,6 +1,6 @@
 @extends('front._layout.layout')
 @section('seo_title','Posts Page')
-
+@section('seo_description','List of blog posts')
 @section('content')
 <div class="container">
     <div class="row">

@@ -3,17 +3,22 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Borislav Petric Blog | @yield('seo_title')</title>
-        <meta name="description" content="This is blog maden by Borislav Petric.Here you can read about so many interesting things.">
+        <title>@yield('seo_title') | Borislav Petric Blog</title>
+        <meta name="description" content="@yield('seo_description','This is blog maden by Borislav Petric.Here you can read about so many interesting things.')">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="all,follow">
-        <meta property=”og:site_name” content=”@yield('title')”>
-        <meta property=”og:description” content=”@yield('descripion')”>
-        <meta property=”og:image” content=”@yield('image')”>
-        <meta property=”og:url” content=”@yield('url')”>
-        <meta property=”og:type” content=”@yield('type')”>
-              <!-- Bootstrap CSS-->
-              <link rel="stylesheet" href="{{url('/themes/front/vendor/bootstrap/css/bootstrap.min.css')}}">
+        <meta property=”og:site_name” content=”{{ config('app.name')}}”>
+        <meta property=”og:description” content=”@yield('seo_description','This is blog maden by Borislav Petric.Here you can read about so many interesting things.')”>
+        <meta property=”og:image” content=”@yield('seo_image',url('/themes/front/img/avatar-1.jpg'))”>
+        <meta property=”og:url” content=”{{url()->current()}}”>
+        <meta property=”og:type” content=”@yield('seo_type','blog')”>
+        <meta name="twitter:card" content="{{ config('app.name')}}">
+        <meta name="twitter:description" content="@yield('seo_description','This is blog maden by Borislav Petric.Here you can read about so many interesting things.')">
+        <meta name="twitter:image" content="@yield('seo_image',url('/themes/front/img/avatar-1.jpg'))">
+        <meta name="twitter:title" content="@yield('seo_title','Borislav Petric Blog')">
+        <meta name="twitter:creator" content="@yield('seo_author','Unknown')">
+        <!-- Bootstrap CSS-->
+        <link rel="stylesheet" href="{{url('/themes/front/vendor/bootstrap/css/bootstrap.min.css')}}">
         <!-- Font Awesome CSS-->
         <link rel="stylesheet" href="{{url('/themes/front/vendor/font-awesome/css/font-awesome.min.css')}}">
         <!-- Custom icon font-->

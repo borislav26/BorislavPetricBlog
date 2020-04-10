@@ -1,5 +1,7 @@
 @extends('front._layout.layout')
 @section('seo_title',$category->name)
+@section('seo_description',$category->description)
+@section('seo_image',$category->getFrontUrl())
 @section('content')
 <div class="container">
     <div class="row">

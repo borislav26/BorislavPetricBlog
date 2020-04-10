@@ -1,5 +1,8 @@
 @extends('front._layout.layout')
 @section('seo_title',$author->name)
+@section('seo_description','The blog posts by author'.$author->name)
+@section('seo_image',$author->getFrontUrl())
+@section('seo_author',$author->name)
 @section('content')
 <div class="container">
     <div class="row">
