@@ -9,9 +9,7 @@ use App\User;
 class UsersController extends Controller {
 
     public function index() {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $authors = User::all();
         return view('admin.authors.index', [
             'authors' => $authors
@@ -19,29 +17,23 @@ class UsersController extends Controller {
     }
 
     public function add() {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         return view('admin.authors.add');
     }
 
-    public function edit(User $autor) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+    public function edit(User $author) {
+       
         return view('admin.authors.edit', [
-            'author' => $autor
+            'author' => $author
         ]);
     }
 
     public function insert(Request $request) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:40'],
             'email' => ['required', 'string'],
-            'phone_number' => ['required', 'string', 'max:30'],
+            'phone_number' => ['nullable', 'string', 'max:30'],
             'image' => ['nullable', 'file', 'image', 'max:51200'],
         ]);
 
@@ -73,13 +65,11 @@ class UsersController extends Controller {
     }
 
     public function update(Request $request, User $author) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:40'],
-            'email' => ['required', 'string', 'max:20'],
-            'phone_number' => ['required', 'string', 'max:30'],
+            'email' => ['required', 'string'],
+            'phone_number' => ['nullable', 'string', 'max:30'],
             'image' => ['nullable', 'file', 'image', 'max:51200'],
         ]);
 
@@ -127,14 +117,12 @@ class UsersController extends Controller {
         $author->delete();
 
         return response()->json([
-            'success_message'=>'You have deleted slider item successfully'
+            'success_message'=>'You have deleted user successfully'
         ]);
     }
 
     public function tableContent() {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $query = User::query();
         $dataTable = \DataTables::of($query);
 
@@ -157,9 +145,7 @@ class UsersController extends Controller {
     }
 
     public function ban(Request $request) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'author_id' => ['required', 'numeric', 'exists:users,id']
         ]);
@@ -170,14 +156,12 @@ class UsersController extends Controller {
         $author->ban = 0;
         $author->save();
         return response()->json([
-                    'success_message' => 'The comment has been disabled'
+                    'success_message' => 'The user is not banned anymore'
         ]);
     }
 
     public function notBan(Request $request) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'author_id' => ['required', 'numeric', 'exists:users,id']
         ]);
@@ -188,7 +172,7 @@ class UsersController extends Controller {
         $author->ban = 1;
         $author->save();
         return response()->json([
-                    'success_message' => 'The comment has been disabled'
+                    'success_message' => 'The user has been banned'
         ]);
     }
 

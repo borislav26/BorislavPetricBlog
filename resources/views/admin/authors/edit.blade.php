@@ -1,4 +1,5 @@
 @extends('admin._layout.layout')
+@section('seo_title','Author Editing')
 @section('content')
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
@@ -56,7 +57,7 @@
                                 <input id="image" type="file" class="form-control @if($errors->has('image'))  is-invalid @endif" name="image">
                                 @include('admin._layout.partials.form_errors',['fieldName'=>'image'])
                             </div>
-                            <button type="submit" class="btn btn-success">@lang('Add')</button>
+                            <button type="submit" class="btn btn-success">@lang('Edit')</button>
                             <a href="{{ route('admin.authors.index')}}"><button type="button" class="btn btn-danger">@lang('Cancel')</button></a>
                         </form>
                     </div>

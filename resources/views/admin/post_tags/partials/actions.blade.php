@@ -9,7 +9,7 @@
         >
         <i class="far fa-trash-alt"></i>
     </button>
-    <a href="{{ route('front.posts.tag',['tag'=>$tag->id])}}">
+    <a href="{{ $tag->getFrontUrl()}}">
         <button class="btn btn-sm btn-outline-light">
             <i class="fas fa-eye"></i>
         </button>

@@ -4,9 +4,7 @@
     <input 
         type="checkbox" 
         @if($author->ban==1)checked="" @endif 
-        name="ban" 
         id="switch{{$author->id}}" 
-        value="{{ $author->ban}}" 
         data-action="ban"
         data-value="{{$author->ban}}"
         data-id="{{ $author->id}}"

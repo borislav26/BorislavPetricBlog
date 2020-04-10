@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PostTags;
-
+use Illuminate\Validation\Rule;
 class PostTagsController extends Controller {
 
     public function index() {
@@ -23,7 +23,7 @@ class PostTagsController extends Controller {
     public function insert(Request $request) {
 
         $formData = $request->validate([
-            'name' => ['required', 'string', 'min:3'],
+            'name' => ['required', 'string', 'min:3','unique:post_tags,name'],
         ]);
 
         $tag = new PostTags();
@@ -46,7 +46,7 @@ class PostTagsController extends Controller {
 
     public function update(Request $request, PostTags $tag) {
         $formData = $request->validate([
-            'name' => ['required', 'string', 'min:3'],
+            'name' => ['required', 'string', 'min:3',Rule::unique('post_tags')->ignore($tag->id)],
         ]);
 
 

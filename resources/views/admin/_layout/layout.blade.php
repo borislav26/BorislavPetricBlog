@@ -64,6 +64,7 @@
         <script src="{{url('/themes/admin/assets/vendor/datatables/jquery.dataTables.min.js')}}" type="text/javascript"></script>
         <script src="{{url('/themes/admin/assets/vendor/datatables/js/dataTables.bootstrap4.min.js')}}" type="text/javascript"></script>
         <script src="{{url('/themes/admin/assets/vendor/AmaranJS-master/dist/js/jquery.amaran.min.js')}}" type="text/javascript"></script>
+        <script src="{{url('/themes/admin/assets/vendor/jquery-validation/jquery.validate.min.js')}}" typ e="text/javascript"></script>
         <script type="text/javascript">
             let failureMessage = "{{ session()->pull('failure_message') }}";
             let systemMessage = "{{ session()->pull('session_message') }}";

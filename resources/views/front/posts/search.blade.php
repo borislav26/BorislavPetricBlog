@@ -1,5 +1,5 @@
 @extends('front._layout.layout')
-
+@section('seo_title',$value)
 @section('content')
 <div class="container">
     <div class="row">
@@ -11,7 +11,7 @@
                     @foreach($posts as $post)
                     <!-- post -->
                     <div class="post col-xl-6">
-                        <div class="post-thumbnail"><a href="{{ route('front.posts.single',['post'=>$post->id,'name'=>\Str::slug($post->title)])}}"><img src="/themes/front/img/blog-post-1.jpeg" alt="..." class="img-fluid"></a></div>
+                        <div class="post-thumbnail"><a href="{{ route('front.posts.single',['post'=>$post->id,'name'=>\Str::slug($post->title)])}}"><img src="{{ $post->getPhotoUrl() }}" alt="..." class="img-fluid"></a></div>
                         <div class="post-details">
                             <div class="post-meta d-flex justify-content-between">
                                 <div class="date meta-last">{{ $post->giveMeHumanFriendlyDate()}}</div>

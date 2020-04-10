@@ -227,12 +227,16 @@
             "type": "get",
             "data": {
 
+            },
+            "error": function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
             }
         }).done(function (response) {
             $('#slider-items-table-field').html(response);
 
         }).fail(function () {
-
+            
         });
     }
     loadTableContent();
@@ -260,7 +264,7 @@
         }
 
     });
-    $('#slider-items-table-field').on('click','[data-action="delete"]' ,function () {
+    $('#slider-items-table-field').on('click', '[data-action="delete"]', function () {
         let categoryId = $(this).attr('data-id');
         let categoryName = $(this).attr('data-name');
 
@@ -290,6 +294,64 @@
         }).fail(function () {
             alert('negde je doslo do greske');
         });
+    });
+    $('#slider-items-table-field').on('click', '[data-action="enable"]', function (e) {
+        e.stopPropagation();
+        let itemId = $(this).attr('data-id');
+        let checked = $(this).attr('data-value');
+        if (checked === "1") {
+            $.ajax({
+                "url": "{{ route('admin.slider_items.disable')}}",
+                "type": "POST",
+                "data": {
+                    "item_id": itemId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+                $.amaran({
+                    'message': response.success_message,
+                    'position': 'top right',
+                    'inEffect': 'slideLeft',
+                    'cssanimationIn': 'boundeInDown',
+                    'cssanimationOut': 'zoomOutUp'
+                });
+                loadTableContent();
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+        if (checked === "0") {
+            $.ajax({
+                "url": "{{ route('admin.slider_items.enable')}}",
+                "type": "POST",
+                "data": {
+                    "item_id": itemId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+                $.amaran({
+                    'message': response.success_message,
+                    'position': 'top right',
+                    'inEffect': 'slideLeft',
+                    'cssanimationIn': 'boundeInDown',
+                    'cssanimationOut': 'zoomOutUp'
+
+                });
+                loadTableContent();
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+
+
     });
 </script>
 @endpush('footer_javascript')

@@ -339,5 +339,119 @@
             alert('negde je doslo do greske');
         });
     });
+    $('#posts-table-field').on('click', '[data-action="enable"]', function (e) {
+        e.stopPropagation();
+        let postId = $(this).attr('data-id');
+        let checked = $(this).attr('data-value');
+        if (checked=="1") {
+            $.ajax({
+                "url": "{{ route('admin.posts.disable')}}",
+                "type": "POST",
+                "data": {
+                    "post_id": postId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+            $.amaran({
+                'message': response.success_message,
+                'position': 'top right',
+                'inEffect': 'slideLeft',
+                'cssanimationIn': 'boundeInDown',
+                'cssanimationOut': 'zoomOutUp'
+            });
+                contentOfDataTables.ajax.reload(null, false);
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+        if (checked=="0") {
+            $.ajax({
+                "url": "{{ route('admin.posts.enable')}}",
+                "type": "POST",
+                "data": {
+                    "post_id": postId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+            $.amaran({
+                'message': response.success_message,
+                'position': 'top right',
+                'inEffect': 'slideLeft',
+                'cssanimationIn': 'boundeInDown',
+                'cssanimationOut': 'zoomOutUp'
+            });
+                contentOfDataTables.ajax.reload(null, false);
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+
+
+    });
+    $('#posts-table-field').on('click', '[data-action="important"]', function (e) {
+        e.stopPropagation();
+        let postId = $(this).attr('data-id');
+        let checked = $(this).attr('data-value');
+        if (checked==="1") {
+            $.ajax({
+                "url": "{{ route('admin.posts.not_important')}}",
+                "type": "POST",
+                "data": {
+                    "post_id": postId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+            $.amaran({
+                'message': response.success_message,
+                'position': 'top right',
+                'inEffect': 'slideLeft',
+                'cssanimationIn': 'boundeInDown',
+                'cssanimationOut': 'zoomOutUp'
+            });
+                contentOfDataTables.ajax.reload(null, false);
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+        if (checked==="0") {
+            $.ajax({
+                "url": "{{ route('admin.posts.important')}}",
+                "type": "POST",
+                "data": {
+                    "post_id": postId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+            $.amaran({
+                'message': response.success_message,
+                'position': 'top right',
+                'inEffect': 'slideLeft',
+                'cssanimationIn': 'boundeInDown',
+                'cssanimationOut': 'zoomOutUp'
+            });
+                contentOfDataTables.ajax.reload(null, false);
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+
+
+    });
 </script>
 @endpush

@@ -25,7 +25,8 @@ class PostsController extends Controller {
 
         $newestPosts = Post::query()
                 ->orderBy('created_at', 'desc')
-                ->take(3)
+                ->where('enable',1)
+                ->limit(3)
                 ->get();
         $categoriesWithHighestPriority = PostCategory::query()
                 ->orderBy('priority', 'desc')
@@ -61,9 +62,13 @@ class PostsController extends Controller {
         $lastPost = Post::query()
                 ->orderBy('id', 'desc')
                 ->first();
+        $firstPost = Post::query()
+                ->orderBy('id', 'asc')
+                ->first();
         $newestPosts = Post::query()
                 ->orderBy('created_at', 'desc')
-                ->take(3)
+                ->where('enable',1)
+                ->limit(3)
                 ->get();
         $categoriesWithHighestPriority = PostCategory::query()
                 ->orderBy('priority', 'desc')
@@ -79,6 +84,7 @@ class PostsController extends Controller {
             'postTags' => $postTags,
             'postCategories' => $postCategories,
             'lastPost' => $lastPost,
+            'firstPost' => $firstPost,
             'newestPosts' => $newestPosts,
             'categoriesWithHighestPriority' => $categoriesWithHighestPriority,
             'postWithTheMostViews' => $postWithTheMostViews
@@ -107,7 +113,8 @@ class PostsController extends Controller {
         $postTags = PostTags::all();
         $newestPosts = Post::query()
                 ->orderBy('created_at', 'desc')
-                ->take(3)
+                ->where('enable',1)
+                ->limit(3)
                 ->get();
         $postWithTheMostViews = Post::query()
                 ->where('created_at', '>=', date('Y-m-d H:i:s', strtotime('-1 month')))
@@ -142,6 +149,7 @@ class PostsController extends Controller {
         $postTags = PostTags::all();
         $newestPosts = Post::query()
                 ->orderBy('created_at', 'desc')
+                ->where('enable',1)
                 ->take(3)
                 ->get();
         $postWithTheMostViews = Post::query()
@@ -177,6 +185,7 @@ class PostsController extends Controller {
         $postTags = PostTags::all();
         $newestPosts = Post::query()
                 ->orderBy('created_at', 'desc')
+                ->where('enable',1)
                 ->take(3)
                 ->get();
         $postWithTheMostViews = Post::query()

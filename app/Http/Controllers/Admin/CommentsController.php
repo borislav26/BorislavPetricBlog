@@ -9,9 +9,7 @@ use App\Models\Comment;
 class CommentsController extends Controller {
 
     public function index() {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $comments = Comment::query()
                 ->with(['post'])
                 ->orderBy('created_at', 'desc')
@@ -22,9 +20,7 @@ class CommentsController extends Controller {
     }
 
     public function disable(Request $request) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'comment_id' => ['required', 'numeric', 'exists:comments,id']
         ]);
@@ -40,9 +36,7 @@ class CommentsController extends Controller {
     }
 
     public function enable(Request $request) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'comment_id' => ['required', 'numeric', 'exists:comments,id']
         ]);
@@ -53,14 +47,12 @@ class CommentsController extends Controller {
         $comment->enable = 1;
         $comment->save();
         return response()->json([
-                    'success_message' => 'The comment has been disabled'
+                    'success_message' => 'The comment has been enabled'
         ]);
     }
 
     public function tableContent() {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $query = Comment::query();
         $dataTable = \DataTables::of($query);
 

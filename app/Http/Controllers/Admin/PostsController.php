@@ -11,12 +11,13 @@ use Illuminate\Validation\Rule;
 use App\User;
 use App\Models\Comment;
 
+define('ADMINISTRATOR', 1);
 class PostsController extends Controller {
 
     public function index() {
         $posts = Post::query()
                 ->withCount(['category', 'author', 'comments']);
-        if (\Auth::user()->role_id != 1) {
+        if (\Auth::user()->role_id != ADMINISTRATOR) {
             $posts->where('post_author_id', \Auth::user()->id);
         }
         $posts->get();
@@ -42,7 +43,7 @@ class PostsController extends Controller {
     }
 
     public function edit(Post $post) {
-        if (\Auth::user()->id != $post->post_author_id && \Auth::user()->role_id != 1) {
+        if (\Auth::user()->id != $post->post_author_id && \Auth::user()->role_id != ADMINISTRATOR) {
             return redirect()->route('admin.index.index');
         }
         $postCategories = PostCategory::all();
@@ -58,10 +59,10 @@ class PostsController extends Controller {
     public function insert(Request $request) {
 
         $formData = $request->validate([
-            'title' => ['required', 'string', 'min:5', 'max:30'],
+            'title' => ['required', 'string', 'min:5', 'max:30', 'unique:posts,title'],
             'shortDescription' => ['required', 'string', 'max:255'],
             'post_category_id' => ['nullable', 'numeric', 'exists:post_categories,id'],
-            'tag_id' => ['required', 'array', 'min:2'],
+            'tag_id' => ['required', 'array', 'min:1'],
             'status_important' => ['required', 'numeric', 'in:0,1'],
             'enable' => ['required', 'numeric', 'in:0,1'],
             'image' => ['nullable', 'file', 'image', 'max:51200'],
@@ -76,6 +77,8 @@ class PostsController extends Controller {
         $post->fill($formData);
 
         $post->save();
+
+        $post->tags()->sync($formData['tag_id']);
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -93,20 +96,20 @@ class PostsController extends Controller {
                     ->save(public_path('/storage/posts/thumbs/' . $post->image));
         }
         session()->flash(
-            'session_message','You have added new post successfully!'
+                'session_message', 'You have added new post successfully!'
         );
         return redirect()->route('admin.posts.index');
     }
 
     public function update(Request $request, Post $post) {
-        if (\Auth::user()->id != $post->post_author_id && \Auth::user()->role_id != 1) {
+        if (\Auth::user()->id != $post->post_author_id && \Auth::user()->role_id != ADMINISTRATOR) {
             return redirect()->route('admin.index.index');
         }
         $formData = $request->validate([
-            'title' => ['required', 'string', 'min:5', 'max:30'],
+            'title' => ['required', 'string', 'min:5', 'max:30', Rule::unique('posts')->ignore($post->id)],
             'shortDescription' => ['required', 'string', 'max:255'],
             'post_category_id' => ['nullable', 'numeric', 'exists:post_categories,id'],
-            'tag_id' => ['required', 'array', 'min:2'],
+            'tag_id' => ['required', 'array', 'min:1'],
             'status_important' => ['required', 'numeric', 'in:0,1'],
             'enable' => ['required', 'numeric', 'in:0,1'],
             'image' => ['nullable', 'file', 'image', 'max:51200'],
@@ -116,6 +119,8 @@ class PostsController extends Controller {
 
         if (empty($formData['post_category_id'])) {
             $post->post_category_id = 0;
+        }else{
+            $post->post_category_id=$formData['post_category_id'];
         }
         $post->post_author_id = \Auth::id();
 
@@ -139,8 +144,9 @@ class PostsController extends Controller {
         }
 
         $post->save();
+        $post->tags()->sync($formData['tag_id']);
         session()->flash(
-            'session_message','You have updated post successfully!'
+                'session_message', 'You have updated post successfully!'
         );
         return redirect()->route('admin.posts.index');
     }
@@ -152,7 +158,7 @@ class PostsController extends Controller {
 
         $post = Post::findOrFail($formData['post_id']);
 
-        if (\Auth::user()->id != $post->post_author_id && \Auth::user()->role_id != 1) {
+        if (\Auth::user()->id != $post->post_author_id && \Auth::user()->role_id != ADMINISTRATOR) {
             return redirect()->route('admin.index.index');
         }
         $post->deletePhoto();
@@ -161,6 +167,7 @@ class PostsController extends Controller {
         Comment::query()
                 ->where('post_id', $post->id)
                 ->delete();
+         $post->tags()->sync([]);
         return response()->json([
                     'success_message' => 'You have deleted post successfully'
         ]);
@@ -175,12 +182,13 @@ class PostsController extends Controller {
             'important' => ['nullable', 'numeric', 'in:0,1'],
             'tag_id' => ['nullable', 'array']
         ]);
-        $query = Post::query()
-                ->with(['author', 'category', 'tags'])
-                ->join('post_categories', 'posts.post_category_id', '=', 'post_categories.id')
-                ->join('users', 'posts.post_author_id', '=', 'users.id')
-                ->select(['posts.*', 'post_categories.name AS category_name', 'users.name AS author_name']);
-        if (\Auth::user()->role_id != 1) {
+        $query = Post::query();
+//                ->with(['author', 'category', 'tags'])
+//                ->join('post_categories', 'posts.post_category_id', '=', 'post_categories.id')
+//                ->join('users', 'posts.post_author_id', '=', 'users.id')
+//                ->select(['posts.*', 'post_categories.name AS category_name', 'users.name AS author_name'])
+//                ->orderBy('id','desc');
+        if (\Auth::user()->role_id != ADMINISTRATOR) {
             $query->where('post_author_id', \Auth::user()->id);
         }
         $dataTable = \DataTables::of($query);
@@ -211,21 +219,93 @@ class PostsController extends Controller {
                         'post' => $post
                     ]);
                 })
-                ->rawColumns(['image', 'actions', 'enable', 'important', 'category'])
-                ->filter(function($query) use ($request) {
-                    if ($request->has('search') && is_array($request->get('search')) && isset($request->get('search')['value'])) {
-                        $valueFromSearchInput = $request->get('search')['value'];
-                        $query->where(function($query) use ($valueFromSearchInput) {
-                            $query->orWhere('enable', $valueFromSearchInput)
-                            ->orWhere('status_important', $valueFromSearchInput)
-                            ->orWhere('posts.title', 'LIKE', '%' . $valueFromSearchInput . '%')
-                            ->orWhere('post_categories.name', 'LIKE', '%' . $valueFromSearchInput . '%')
-                            ->orWhere('users.name', 'LIKE', '%' . $valueFromSearchInput . '%');
-                        });
-                    }
-                });
+                ->rawColumns(['image', 'actions', 'enable', 'important', 'category']);
+//                ->filter(function($query) use ($request) {
+//                    if ($request->has('search') && is_array($request->get('search')) && isset($request->get('search')['value'])) {
+//                        $valueFromSearchInput = $request->get('search')['value'];
+//                        $query->where(function($query) use ($valueFromSearchInput) {
+//                            $query->orWhere('enable', $valueFromSearchInput)
+//                            ->orWhere('status_important', $valueFromSearchInput)
+//                            ->orWhere('posts.title', 'LIKE', '%' . $valueFromSearchInput . '%')
+//                            ->orWhere('post_categories.name', 'LIKE', '%' . $valueFromSearchInput . '%')
+//                            ->orWhere('users.name', 'LIKE', '%' . $valueFromSearchInput . '%');
+//                        });
+//                    }
+//                });
 
         return $dataTable->make(true);
+    }
+
+    public function disable(Request $request) {
+        if (\Auth::user()->role_id != ADMINISTRATOR) {
+            return redirect()->route('admin.index.index');
+        }
+        $formData = $request->validate([
+            'post_id' => ['required', 'numeric', 'exists:posts,id']
+        ]);
+
+        $post = Post::findOrFail($formData['post_id']);
+
+
+        $post->enable = 0;
+        $post->save();
+        return response()->json([
+                    'success_message' => 'The post has been disabled'
+        ]);
+    }
+
+    public function enable(Request $request) {
+        if (\Auth::user()->role_id != ADMINISTRATOR) {
+            return redirect()->route('admin.index.index');
+        }
+        $formData = $request->validate([
+            'post_id' => ['required', 'numeric', 'exists:posts,id']
+        ]);
+
+        $post = Post::findOrFail($formData['post_id']);
+
+
+        $post->enable = 1;
+        $post->save();
+        return response()->json([
+                    'success_message' => 'The post has been enabled'
+        ]);
+    }
+
+    public function notImportant(Request $request) {
+        if (\Auth::user()->role_id != ADMINISTRATOR) {
+            return redirect()->route('admin.index.index');
+        }
+        $formData = $request->validate([
+            'post_id' => ['required', 'numeric', 'exists:posts,id']
+        ]);
+
+        $post = Post::findOrFail($formData['post_id']);
+
+
+        $post->status_important = 0;
+        $post->save();
+        return response()->json([
+                    'success_message' => 'The post put as not important'
+        ]);
+    }
+
+    public function important(Request $request) {
+        if (\Auth::user()->role_id != ADMINISTRATOR) {
+            return redirect()->route('admin.index.index');
+        }
+        $formData = $request->validate([
+            'post_id' => ['required', 'numeric', 'exists:posts,id']
+        ]);
+
+        $post = Post::findOrFail($formData['post_id']);
+
+
+        $post->status_important = 1;
+        $post->save();
+        return response()->json([
+                    'success_message' => 'The post put as important'
+        ]);
     }
 
 }

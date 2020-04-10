@@ -29,7 +29,7 @@
                     </ul>
                     <ul class="list-unstyled">
                         @foreach($categoriesWithHighestPriority as $category)
-                        <li> <a href="blog-category.html">{{ $category->name}}</a></li>
+                        <li> <a href="{{ $category->getFrontUrl()}}">{{ $category->name}}</a></li>
                         @endforeach
 
                     </ul>
@@ -38,7 +38,7 @@
             <div class="col-md-4">
                 <div class="latest-posts">
                     @foreach($newestPosts as $newestPost)
-                    <a href="{{ route('front.posts.single',['post'=>$newestPost->id])}}">
+                    <a href="{{ $newestPost->getFrontUrl()}}">
                         <div class="post d-flex align-items-center">
                             <div class="image"><img src="{{url('/themes/front/img/small-thumbnail-1.jpg')}}" alt="..." class="img-fluid"></div>
                             <div class="title"><strong>{{ $newestPost->title}}</strong><span class="date last-meta">{{ $newestPost->giveMeHumanFriendlyDate()}}</span></div>
@@ -56,7 +56,7 @@
                     <p>&copy; 2020.Borislav Petric. All rights reserved. </p>
                 </div>
                 <div class="col-md-6 text-right">
-                    <p>Blog by <a href="https://bootstrapious.com/p/bootstrap-carousel" class="text-white">Borislav Petric</a>
+                    <p>Blog by <a href="#" class="text-white">Borislav Petric</a>
                         <!-- Please do not remove the backlink to Bootstrap Temple unless you purchase an attribution-free license @ Bootstrap Temple or support us at http://bootstrapious.com/donate. It is part of the license conditions. Thanks for understanding :)                         -->
                     </p>
                 </div>

@@ -6,13 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PostCategory;
 use App\Models\Post;
-
+use Illuminate\Validation\Rule;
 class PostCategoriesController extends Controller {
 
     public function index() {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $postCategories = PostCategory::all();
         return view('admin.post_categories.index', [
             'postCategories' => $postCategories
@@ -20,27 +18,21 @@ class PostCategoriesController extends Controller {
     }
 
     public function add() {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         return view('admin.post_categories.add');
     }
 
     public function edit(PostCategory $category) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         return view('admin.post_categories.edit', [
             'category' => $category
         ]);
     }
 
     public function insert(Request $request) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
-            'name' => ['required', 'string', 'min:3'],
+            'name' => ['required', 'string', 'min:3','unique:post_categories,name'],
             'description' => ['required', 'string', 'min:5'],
         ]);
 
@@ -57,11 +49,9 @@ class PostCategoriesController extends Controller {
     }
 
     public function update(Request $request, PostCategory $category) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
-            'name' => ['required', 'string', 'min:3'],
+            'name' => ['required', 'string', 'min:3',Rule::unique('post_categories')->ignore($category->id)],
             'description' => ['required', 'string', 'min:5'],
         ]);
 
@@ -78,9 +68,7 @@ class PostCategoriesController extends Controller {
     }
 
     public function delete(Request $request) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'category_id' => ['required', 'numeric', 'exists:post_categories,id']
         ]);
@@ -104,9 +92,7 @@ class PostCategoriesController extends Controller {
     }
 
     public function changePriority(Request $request) {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'priorities' => ['required', 'string']
         ]);
@@ -121,9 +107,7 @@ class PostCategoriesController extends Controller {
     }
 
     public function tableContent() {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $postCategories = PostCategory::all();
         return view('admin.post_categories.partials.table_content', [
             'postCategories' => $postCategories

@@ -32,7 +32,13 @@
         <td>
             <div class="switch-button switch-button-success">
                 <div class="text-center">{{ $item->enable}}</div>
-                <input type="checkbox"  @if($item->enable==1) checked=""  @endif name="enable" id="switch{{$item->id}}" value="{{ $item->enable}}">
+                <input type="checkbox"  
+                       @if($item->enable==1) checked=""  @endif 
+                       id="switch{{$item->id}}"
+                       data-value="{{$item->enable}}"
+                       data-id="{{$item->id}}"
+                       data-action="enable"
+                       >
                        <span>
                     <label for="switch{{ $item->id}}"></label>
                 </span>
@@ -40,7 +46,7 @@
         </td>
         <td>
             <div class="btn-group ml-auto">
-                <a href="{{ route('admin.slider_items.edit',['sliderItem'=>$item->id])}}"><button class="btn btn-sm btn-outline-light">Edit</button></a>
+                <a href="{{$item->getFrontUrl()}}"><button class="btn btn-sm btn-outline-light">Edit</button></a>
                 <button 
                     class="btn btn-sm btn-outline-light" 
                     data-toggle="modal" 

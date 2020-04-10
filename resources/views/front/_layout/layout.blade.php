@@ -4,11 +4,16 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Borislav Petric Blog | @yield('seo_title')</title>
-        <meta name="description" content="">
+        <meta name="description" content="This is blog maden by Borislav Petric.Here you can read about so many interesting things.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="all,follow">
-        <!-- Bootstrap CSS-->
-        <link rel="stylesheet" href="{{url('/themes/front/vendor/bootstrap/css/bootstrap.min.css')}}">
+        <meta property=”og:site_name” content=”@yield('title')”>
+        <meta property=”og:description” content=”@yield('descripion')”>
+        <meta property=”og:image” content=”@yield('image')”>
+        <meta property=”og:url” content=”@yield('url')”>
+        <meta property=”og:type” content=”@yield('type')”>
+              <!-- Bootstrap CSS-->
+              <link rel="stylesheet" href="{{url('/themes/front/vendor/bootstrap/css/bootstrap.min.css')}}">
         <!-- Font Awesome CSS-->
         <link rel="stylesheet" href="{{url('/themes/front/vendor/font-awesome/css/font-awesome.min.css')}}">
         <!-- Custom icon font-->
@@ -49,18 +54,18 @@
 
         <script src="{{url('/themes/front/plugins/owl-carousel2/owl.carousel.min.js')}}"></script>
         <script>
-    $("#index-slider").owlCarousel({
-    "items": 1,
-            "loop": true,
-            "autoplay": true,
-            "autoplayHoverPause": true
-    });
-    $("#latest-posts-slider").owlCarousel({
-    "items": 1,
-            "loop": true,
-            "autoplay": true,
-            "autoplayHoverPause": true
-    });
+            $("#index-slider").owlCarousel({
+            "items": 1,
+                    "loop": true,
+                    "autoplay": true,
+                    "autoplayHoverPause": true
+            });
+            $("#latest-posts-slider").owlCarousel({
+            "items": 1,
+                    "loop": true,
+                    "autoplay": true,
+                    "autoplayHoverPause": true
+            });
         </script>
         @stack('footer_javascript')
     </body>

@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
          $this->call(PostTagsTableSeeder::class);
          $this->call(PostHasTagsTableSeeder::class);
          $this->call(CommentsTableSeeder::class);
+         $this->call(UserRolesTableSeeder::class);
     }
 }

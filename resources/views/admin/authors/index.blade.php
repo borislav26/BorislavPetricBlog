@@ -1,4 +1,5 @@
 @extends('admin._layout.layout')
+@section('seo_title','List of authors')
 @section('content')
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
@@ -268,26 +269,7 @@
         e.stopPropagation();
         let authorId = $(this).attr('data-id');
         let checked = $(this).attr('data-value');
-        if (checked) {
-            $.ajax({
-                "url": "{{ route('admin.authors.ban')}}",
-                "type": "POST",
-                "data": {
-                    "author_id": authorId,
-                    "_token": "{{  csrf_token()}}"
-                },
-                "error": function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status);
-                    alert(thrownError);
-                }
-            }).done(function (response) {
-
-                contentOfDataTables.ajax.reload(null, false);
-            }).fail(function () {
-                alert('negde je doslo do greske');
-            });
-        }
-        if (!checked) {
+        if (checked==="0") {
             $.ajax({
                 "url": "{{ route('admin.authors.not_ban')}}",
                 "type": "POST",
@@ -300,7 +282,38 @@
                     alert(thrownError);
                 }
             }).done(function (response) {
-
+            $.amaran({
+                'message': response.success_message,
+                'position': 'top right',
+                'inEffect': 'slideLeft',
+                'cssanimationIn': 'boundeInDown',
+                'cssanimationOut': 'zoomOutUp'
+            });
+                contentOfDataTables.ajax.reload(null, false);
+            }).fail(function () {
+                alert('negde je doslo do greske');
+            });
+        }
+        if (checked==="1") {
+            $.ajax({
+                "url": "{{ route('admin.authors.ban')}}",
+                "type": "POST",
+                "data": {
+                    "author_id": authorId,
+                    "_token": "{{  csrf_token()}}"
+                },
+                "error": function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            }).done(function (response) {
+            $.amaran({
+                'message': response.success_message,
+                'position': 'top right',
+                'inEffect': 'slideLeft',
+                'cssanimationIn': 'boundeInDown',
+                'cssanimationOut': 'zoomOutUp'
+            });
                 contentOfDataTables.ajax.reload(null, false);
             }).fail(function () {
                 alert('negde je doslo do greske');

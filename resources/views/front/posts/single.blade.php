@@ -1,5 +1,5 @@
 @extends('front._layout.layout')
-@section('seo_title',' $post->title')
+@section('seo_title', $post->title)
 @section('content')
 <div class="container">
     <div class="row">
@@ -45,7 +45,7 @@
 
                         </div>
                         <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
-                            @if($post->id!=1)
+                            @if($post->id!=$firstPost->id)
                             <a href="{{ route('front.posts.single',['post'=>$post->giveMePreviousPost()->id,'name'=>\Str::slug($post->giveMePreviousPost()->title)])}}" class="prev-post text-left d-flex align-items-center">
                                 <div class="icon prev">
                                     <i class="fa fa-angle-left"></i>
@@ -73,7 +73,7 @@
                             </a>
                             @endif
                         </div>
-                        <div class="post-comments" id="post-comments">
+                        <div class="post-comments" id="field-for-comments">
 
 
                         </div>
@@ -119,74 +119,99 @@
 @endpush
 @push('footer_javascript')
 <script src="{{url('/themes/front/plugins/overhang.js-master/dist/overhang.min.js')}}" type="text/javascript"></script>
+<script src="{{url('/themes/admin/assets/vendor/jquery-validation/jquery.validate.min.js')}}" typ e="text/javascript"></script>
+
 @endpush
 @push('footer_javascript')
 <script>
-   
+    $('#comment_field').validate({
+    "rules": {
+
+    "name_of_visitor": {
+    required: true,
+            maxlength: 30
+    },
+            "email_of_visitor": {
+            required: false
+
+            },
+            "content": {
+            required: true
+
+            }
+
+    },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+            }
+    });
     function incrementViews() {
-        $.ajax({
-            "url": "{{ route('front.posts.increment_views') }}",
+    $.ajax({
+    "url": "{{ route('front.posts.increment_views') }}",
             "type": "post",
             "data": {
-                'post_id': "{{ $post->id}}",
-                '_token': "{{ csrf_token()}}"
+            'post_id': "{{ $post->id}}",
+                    '_token': "{{ csrf_token()}}"
             }
-        }).done(function (response) {
- 
-        }).fail(function () {
+    }).done(function (response) {
 
-        });
+    }).fail(function () {
+
+    });
     }
     function loadComments() {
 
-        $.ajax({
-            "url": "{{route('front.posts.comments',['post'=>$post->id])}}",
+    $.ajax({
+    "url": "{{route('front.posts.comments',['post'=>$post->id])}}",
             "type": "GET",
-
-            "error": function (ts) {
-                alert(ts.responseText);
+            "error": function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
             }
-        }).done(function (response) {
+    }).done(function (response) {
 
-            console.log('sve je dobro odradjeno');
-            $('#post-comments').html(response);
-        }).fail(function (response) {
-            console.log('nege je doslo do greske');
-        });
+    console.log('sve je dobro odradjeno');
+    $('#field-for-comments').html(response);
+    }).fail(function (response) {
+    console.log('nege je doslo do greske');
+    });
     }
     loadComments();
     incrementViews();
     $('#comment_field [data-action="leave-comment"]').on('click', function (e) {
-        e.preventDefault();
-        let postId = "{{ $post->id}}";
-        let name = $('#comment_field [name="name_of_visitor"]').val();
-        let email = $('#comment_field [name="email_of_visitor"]').val();
-        let content = $('#comment_field [name="content"]').val();
-        $.ajax({
-            "url": "{{route('front.posts.leave_comment')}}",
+    e.preventDefault();
+    let postId = "{{ $post->id}}";
+    let name = $('#comment_field [name="name_of_visitor"]').val();
+    let email = $('#comment_field [name="email_of_visitor"]').val();
+    let content = $('#comment_field [name="content"]').val();
+    $.ajax({
+    "url": "{{route('front.posts.leave_comment')}}",
             "type": "POST",
             "data": {
-                "post_id": postId,
-                "name_of_visitor": name,
-                "email_of_visitor": email,
-                "content": content,
-                "_token": "{{ csrf_token()}}"
+            "post_id": postId,
+                    "name_of_visitor": name,
+                    "email_of_visitor": email,
+                    "content": content,
+                    "_token": "{{ csrf_token()}}"
             },
             "error": function (ts) {
 
             }
-        }).done(function (response) {
-                $('body').overhang({
-                    "type":"success",
-                    "message":response.success_message,
-                    "closeConfirm":true,
-                    "duration":3,
-                    "overlay":true
-                });
-            console.log('dobro je sve odradjeno');
-        }).fail(function (response) {
-            alert(reponse);
-        });
+    }).done(function (response) {
+
+    loadComments();
+   
+    }).fail(function (response) {
+    alert(reponse);
+    });
     });
 
 </script>

@@ -87,7 +87,7 @@
                         </div>
                     </li>
                     @endif
-                    @if(\Auth::user()->role_id==1 || \Auth::user()->role_id==2)
+                    @if(\Auth::user()->role_id==1)
 
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="far fa-user"></i>@lang('Authors')</a>

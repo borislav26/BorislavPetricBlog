@@ -1,1 +1,1 @@
- <img class="mr-3 user-avatar-lg rounded" src="{{ $author->image}}" alt="Generic placeholder image">
+ <img class="mr-3 user-avatar-lg rounded" src="{{ $author->getPhotoUrl()}}" alt="Generic placeholder image">

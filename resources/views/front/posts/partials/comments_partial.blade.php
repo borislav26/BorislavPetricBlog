@@ -1,7 +1,7 @@
 <header>
-<h3 class="h6">Post Comments<span class="no-of-comments">({{optional($post->comments())->where('enable','!=','0')->count()}})</span></h3>
+<h3 class="h6">Post Comments<span class="no-of-comments">({{$post->comments()->where('enable','!=','0')->count()}})</span></h3>
 </header>
-@foreach(optional($post->comments())->where('enable','!=',0)->orderBy('created_at','desc')->get() as $comment)
+@foreach($post->comments()->where('enable','!=',0)->orderBy('created_at','desc')->get() as $comment)
 <div class="comment">
     <div class="comment-header d-flex justify-content-between">
         <div class="user d-flex align-items-center">

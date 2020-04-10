@@ -10,7 +10,7 @@ use App\Models\Comment;
 class Post extends Model {
 
     protected $table = 'posts';
-    protected $fillable = ['title', 'shortDescription', 'mainContent', 'status_important', 'enable', 'post_category_id'];
+    protected $fillable = ['title', 'shortDescription', 'mainContent', 'status_important', 'enable'];
 
     public function author() {
         return $this->hasOne(User::class, 'id', 'post_author_id');
@@ -56,16 +56,17 @@ class Post extends Model {
 
         $previousPost = Post::query()
                 ->where('id', '<', $this->id)
-                ->orderBy('id','desc')
-                ->first();
+                ->firstOrFail();
+        if(!$previousPost){
+            return Post::query()->orderBy('id','desc')->limit(1)->get();
+        }
         return $previousPost;
     }
 
     public function giveMeNextPost() {
         $nextPost = Post::query()
                 ->where('id', '>', $this->id)
-                ->orderBy('id','asc')
-                ->first();
+                ->firstOrFail();
         return $nextPost;
     }
 

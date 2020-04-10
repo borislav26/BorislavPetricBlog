@@ -28,9 +28,11 @@
                         >
                         <i class="far fa-trash-alt"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-light">
-                        <i class="fas fa-eye"></i>
-                    </button>
+                    <a href="{{ $category->getFrontUrl()}}">
+                        <button class="btn btn-sm btn-outline-light">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </a>
                     <span class="btn btn-outline-secondary" data-action="button-for-priority"  style="display: none;" data-action="change-priority-button">
                         <i class="fas fa-sort">Change priority</i>
                     </span>
@@ -65,12 +67,12 @@
             "url": "{{ route('admin.post_categories.delete')}}",
             "type": "post",
             "data": $(this).serialize(),
- 
+
         }).done(function (response) {
-            
+
             loadTableContent();
         }).fail(function () {
-            
+
         });
     });
 </script>

@@ -10,9 +10,7 @@ use Intervention\Image\Image;
 class SliderItemsController extends Controller {
 
     public function index() {
-        if (\Auth::user()->role_id == 3) {
-            return redirect()->route('admin.index.index');
-        }
+
         $sliderItems = SliderItem::all();
         return view('admin.slider_items.index', [
             'sliderItems' => $sliderItems
@@ -27,9 +25,7 @@ class SliderItemsController extends Controller {
     }
 
     public function insert(Request $request) {
-        if (\Auth::user()->role_id == 3) {
-            return redirect()->route('admin.index.index');
-        }
+ 
         $formData = $request->validate([
             'title' => ['required', 'string', 'max:30'],
             'button_name' => ['required', 'string', 'max:20'],
@@ -69,9 +65,7 @@ class SliderItemsController extends Controller {
     }
 
     public function changeOrder(Request $request) {
-        if (\Auth::user()->role_id == 3) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'orders' => ['required', 'string']
         ]);
@@ -88,18 +82,14 @@ class SliderItemsController extends Controller {
     }
 
     public function edit(SliderItem $sliderItem) {
-        if (\Auth::user()->role_id == 3) {
-            return redirect()->route('admin.index.index');
-        }
+
         return view('admin.slider_items.edit', [
             'sliderItem' => $sliderItem
         ]);
     }
 
     public function update(Request $request, SliderItem $sliderItem) {
-        if (\Auth::user()->role_id == 3) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'title' => ['required', 'string', 'max:30'],
             'button_name' => ['required', 'string', 'max:20'],
@@ -138,9 +128,7 @@ class SliderItemsController extends Controller {
     }
 
     public function delete(Request $request) {
-        if (\Auth::user()->role_id == 3) {
-            return redirect()->route('admin.index.index');
-        }
+
         $formData = $request->validate([
             'slider_id' => ['required', 'numeric', 'exists:slider_items,id']
         ]);
@@ -156,12 +144,42 @@ class SliderItemsController extends Controller {
     }
 
     public function tableContent() {
-        if (\Auth::user()->role_id != 1) {
-            return redirect()->route('admin.index.index');
-        }
+
         $sliderItems = SliderItem::all();
         return view('admin.slider_items.partials.table_content', [
             'sliderItems' => $sliderItems
+        ]);
+    }
+
+    public function disable(Request $request) {
+
+        $formData = $request->validate([
+            'item_id' => ['required', 'numeric', 'exists:slider_items,id']
+        ]);
+
+        $item = SliderItem::findOrFail($formData['item_id']);
+
+
+        $item->enable = 0;
+        $item->save();
+        return response()->json([
+                    'success_message' => 'The slider item has been disabled'
+        ]);
+    }
+
+    public function enable(Request $request) {
+
+        $formData = $request->validate([
+            'item_id' => ['required', 'numeric', 'exists:slider_items,id']
+        ]);
+
+        $item = SliderItem::findOrFail($formData['item_id']);
+
+
+        $item->enable = 1;
+        $item->save();
+        return response()->json([
+                    'success_message' => 'The slider item has been enabled'
         ]);
     }
 

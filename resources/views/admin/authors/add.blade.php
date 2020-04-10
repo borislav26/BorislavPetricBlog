@@ -1,4 +1,5 @@
 @extends('admin._layout.layout')
+@section('seo_title','Add new author')
 @section('content')
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">

@@ -31,7 +31,7 @@ class UsersTableSeeder extends Seeder {
         ]);
         \DB::table('users')->insert([
             'name' => 'Aleksandar Dimic',
-            'email' => 'dimi7even@cubes.rs',
+            'email' => 'aleksandar.dimic@cubes.rs',
             'password' => \Hash::make('cubesphp'),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),

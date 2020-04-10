@@ -1,5 +1,5 @@
 @extends('front._layout.layout')
-
+@section('seo_title','#'.$tag->name)
 @section('content')
 <div class="container">
     <div class="row">
