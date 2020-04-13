@@ -21,8 +21,6 @@
     @if(\Auth::user()->id!=$message->user_to_id)
     <img alt="William" src="/themes/admin/assets/images/avatar-1.jpg" class="rounded-circle user-avatar-lg">
     <span class="avatar-badge has-indicator online">
-        2
-        <i class="fa fa-check"></i>
     </span>
     @endif
 </div>
