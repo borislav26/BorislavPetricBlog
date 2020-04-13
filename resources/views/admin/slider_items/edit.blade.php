@@ -64,7 +64,7 @@
                             <a href="{{ route('admin.slider_items.index')}}"><button type="button" class="btn btn-danger">@lang('Cancel')</button></a>
                         </form>
                     </div>
-
+                    @include('admin._layout.partials.footer')
                 </div>
             </div>
         </div>

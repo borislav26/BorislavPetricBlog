@@ -56,7 +56,7 @@ class UsersController extends Controller {
 
             \Image::make(public_path('/storage/authors/' . $author->image))
                     ->fit(256, 256)
-                    ->save(public_path('/storage/authors/thumbs' . $author->image));
+                    ->save(public_path('/storage/authors/thumbs/' . $author->image));
         }
         session()->flash(
             'session_message','You have added new user successfully!'
@@ -94,7 +94,7 @@ class UsersController extends Controller {
 
             \Image::make(public_path('/storage/authors/' . $author->image))
                     ->fit(256, 256)
-                    ->save(public_path('/storage/authors/thumbs' . $author->image));
+                    ->save(public_path('/storage/authors/thumbs/' . $author->image));
         }
         session()->flash(
             'session_message','You have updated user successfully!'

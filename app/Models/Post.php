@@ -42,14 +42,8 @@ class Post extends Model {
     }
 
     public function goodFormatedDate() {
-        $year = date('Y', strtotime($this->created_at));
-        $month = date('n', strtotime($this->created_at));
-        $day = date('d', strtotime($this->created_at));
-        $currentMonth = date('n', strtotime(time()));
-        if ($currentMonth - $month < 1) {
-            return \Carbon\Carbon::createFromDate($year, $month, $day)->diff(\Carbon\Carbon::now())->format('%d days ago');
-        }
-        return \Carbon\Carbon::createFromDate($year, $month, $day)->diff(\Carbon\Carbon::now())->format('%m months ago');
+
+        return \Carbon\Carbon::parse($this->created_at)->diffForHumans();
     }
 
     public function giveMePreviousPost() {

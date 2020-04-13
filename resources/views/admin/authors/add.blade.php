@@ -51,7 +51,7 @@
                                 @include('admin._layout.partials.form_errors',['fieldName'=>'ban'])
                             </div>
 
-                          
+
                             <div class="form-group">
                                 <label for="image" class="col-form-label">@lang('Image')</label>
                                 <input id="image" type="file" class="form-control @if($errors->has('image'))  is-invalid @endif" name="image">
@@ -61,7 +61,7 @@
                             <a href="{{ route('admin.authors.index')}}"><button type="button" class="btn btn-danger">@lang('Cancel')</button></a>
                         </form>
                     </div>
-
+                    @include('admin._layout.partials.footer')
                 </div>
             </div>
         </div>

@@ -119,11 +119,12 @@
 @endsection
 @push('head_css')
 <link href="{{url('/themes/front/plugins/overhang.js-master/dist/overhang.min.css')}}" rel="stylesheet" type="text/css"/>
+<link href="{{url('/themes/front/plugins/Simple-Easy-jQuery-Notification-Plugin-NotifIt/notifIt/css/notifIt.min.css')}}" rel="stylesheet" type="text/css"/>
 @endpush
 @push('footer_javascript')
 <script src="{{url('/themes/front/plugins/overhang.js-master/dist/overhang.min.js')}}" type="text/javascript"></script>
 <script src="{{url('/themes/admin/assets/vendor/jquery-validation/jquery.validate.min.js')}}" typ e="text/javascript"></script>
-
+<script src="{{url('/themes/front/plugins/Simple-Easy-jQuery-Notification-Plugin-NotifIt/notifIt/js/notifIt.min.js')}}" type="text/javascript"></script>
 @endpush
 @push('footer_javascript')
 <script>
@@ -209,7 +210,6 @@
 
             }
     }).done(function (response) {
-
     loadComments();
    
     }).fail(function (response) {

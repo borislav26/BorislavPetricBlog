@@ -45,7 +45,7 @@
                             <a href="{{ route('admin.post_tags.index')}}"><button type="button" class="btn btn-danger">@lang('Cancel')</button></a>
                         </form>
                     </div>
-                  
+                   @include('admin._layout.partials.footer')
                 </div>
             </div>
         </div>

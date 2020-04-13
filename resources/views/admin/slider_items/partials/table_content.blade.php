@@ -46,7 +46,7 @@
         </td>
         <td>
             <div class="btn-group ml-auto">
-                <a href="{{$item->getFrontUrl()}}"><button class="btn btn-sm btn-outline-light">Edit</button></a>
+                <a href="{{ route('admin.slider_items.edit',['sliderItem'=>$item->id])}}"><button class="btn btn-sm btn-outline-light">Edit</button></a>
                 <button 
                     class="btn btn-sm btn-outline-light" 
                     data-toggle="modal" 

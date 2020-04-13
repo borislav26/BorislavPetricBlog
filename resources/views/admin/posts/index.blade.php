@@ -97,59 +97,7 @@
                                 </tr>
                             </thead>
                             <tbody id="post-table-field">
-                                <!--                                @foreach($posts as $post)
-                                                                <tr>
-                                                                    <td>{{ $post->id }}</td>
-                                                                    <td>{{ $post->title}}</td>
-                                                                    <td>
-                                                                        <img class="mr-3 user-avatar-lg rounded" src="/themes/admin/assets/images/avatar-1.jpg" alt="Generic placeholder image">
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="text-center">{{ $post->enable}}</div>
-                                                                        <div class="switch-button switch-button-success">
-                                                                            <input type="checkbox" checked="" name="enable" id="switch{{$post->id}}" value="{{ $post->enable}}">
-                                                                            <span>
-                                                                                <label for="switch{{ $post->id}}"></label>
-                                                                            </span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="text-center">
-                                                                            {{ $post->status_important}}
-                                                                        </div>
-                                                                        <div class="switch-button switch-button-success">
-                                                                            <input type="checkbox" checked="" name="important" id="switch_{{ $post->id}}" value="{{ $post->important}}">
-                                                                            <span>
-                                                                                <label for="switch_{{ $post->id}}"></label>
-                                                                            </span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>{{ $post->shortDescription}}</td>
-                                                                    <td>{{ $post->author->name}}</td>
-                                                                    <td>
-                                                                        @if($post->post_category_id==0)
-                                                                        <span class="text-warning">Uncategorized</span>
-                                                                        @endif
-                                                                        @if($post->post_category_id!=0)
-                                                                        {{ $post->category->name}}
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>{{ $post->comments()->count()}}</td>
-                                                                    <td>{{ $post->reviews}}</td>
-                                                                    <td>{{ $post->giveMeHumanFriendlyDate()}}</td>
-                                                                    <td>
-                                                                        <div class="btn-group ml-auto">
-                                                                            <a href="{{ route('admin.posts.edit',['post'=>$post->id])}}"><button class="btn btn-sm btn-outline-light">Edit</button></a>
-                                                                            <button class="btn btn-sm btn-outline-light">
-                                                                                <i class="far fa-trash-alt"></i>
-                                                                            </button>
-                                                                            <button class="btn btn-sm btn-outline-light">
-                                                                                <i class="fas fa-eye"></i>
-                                                                            </button>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                @endforeach-->
+
 
                             </tbody>
                             <tfoot>
@@ -179,22 +127,7 @@
     <!-- ============================================================== -->
     <!-- footer -->
     <!-- ============================================================== -->
-    <div class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                    Copyright © 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                    <div class="text-md-right footer-links d-none d-sm-block">
-                        <a href="javascript: void(0);">About</a>
-                        <a href="javascript: void(0);">Support</a>
-                        <a href="javascript: void(0);">Contact Us</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('admin._layout.partials.footer')
     <!-- ============================================================== -->
     <!-- end footer -->
     <!-- ============================================================== -->
@@ -343,7 +276,7 @@
         e.stopPropagation();
         let postId = $(this).attr('data-id');
         let checked = $(this).attr('data-value');
-        if (checked=="1") {
+        if (checked == "1") {
             $.ajax({
                 "url": "{{ route('admin.posts.disable')}}",
                 "type": "POST",
@@ -356,19 +289,19 @@
                     alert(thrownError);
                 }
             }).done(function (response) {
-            $.amaran({
-                'message': response.success_message,
-                'position': 'top right',
-                'inEffect': 'slideLeft',
-                'cssanimationIn': 'boundeInDown',
-                'cssanimationOut': 'zoomOutUp'
-            });
+                $.amaran({
+                    'message': response.success_message,
+                    'position': 'top right',
+                    'inEffect': 'slideLeft',
+                    'cssanimationIn': 'boundeInDown',
+                    'cssanimationOut': 'zoomOutUp'
+                });
                 contentOfDataTables.ajax.reload(null, false);
             }).fail(function () {
                 alert('negde je doslo do greske');
             });
         }
-        if (checked=="0") {
+        if (checked == "0") {
             $.ajax({
                 "url": "{{ route('admin.posts.enable')}}",
                 "type": "POST",
@@ -381,13 +314,13 @@
                     alert(thrownError);
                 }
             }).done(function (response) {
-            $.amaran({
-                'message': response.success_message,
-                'position': 'top right',
-                'inEffect': 'slideLeft',
-                'cssanimationIn': 'boundeInDown',
-                'cssanimationOut': 'zoomOutUp'
-            });
+                $.amaran({
+                    'message': response.success_message,
+                    'position': 'top right',
+                    'inEffect': 'slideLeft',
+                    'cssanimationIn': 'boundeInDown',
+                    'cssanimationOut': 'zoomOutUp'
+                });
                 contentOfDataTables.ajax.reload(null, false);
             }).fail(function () {
                 alert('negde je doslo do greske');
@@ -400,7 +333,7 @@
         e.stopPropagation();
         let postId = $(this).attr('data-id');
         let checked = $(this).attr('data-value');
-        if (checked==="1") {
+        if (checked === "1") {
             $.ajax({
                 "url": "{{ route('admin.posts.not_important')}}",
                 "type": "POST",
@@ -413,19 +346,19 @@
                     alert(thrownError);
                 }
             }).done(function (response) {
-            $.amaran({
-                'message': response.success_message,
-                'position': 'top right',
-                'inEffect': 'slideLeft',
-                'cssanimationIn': 'boundeInDown',
-                'cssanimationOut': 'zoomOutUp'
-            });
+                $.amaran({
+                    'message': response.success_message,
+                    'position': 'top right',
+                    'inEffect': 'slideLeft',
+                    'cssanimationIn': 'boundeInDown',
+                    'cssanimationOut': 'zoomOutUp'
+                });
                 contentOfDataTables.ajax.reload(null, false);
             }).fail(function () {
                 alert('negde je doslo do greske');
             });
         }
-        if (checked==="0") {
+        if (checked === "0") {
             $.ajax({
                 "url": "{{ route('admin.posts.important')}}",
                 "type": "POST",
@@ -438,13 +371,13 @@
                     alert(thrownError);
                 }
             }).done(function (response) {
-            $.amaran({
-                'message': response.success_message,
-                'position': 'top right',
-                'inEffect': 'slideLeft',
-                'cssanimationIn': 'boundeInDown',
-                'cssanimationOut': 'zoomOutUp'
-            });
+                $.amaran({
+                    'message': response.success_message,
+                    'position': 'top right',
+                    'inEffect': 'slideLeft',
+                    'cssanimationIn': 'boundeInDown',
+                    'cssanimationOut': 'zoomOutUp'
+                });
                 contentOfDataTables.ajax.reload(null, false);
             }).fail(function () {
                 alert('negde je doslo do greske');

@@ -101,4 +101,10 @@ Route::middleware('auth')->namespace('Admin')->prefix('/admin')->group(function(
         Route::get('/{userName?}', 'UserProfileController@index')->name('admin.user_profile.index');
         Route::post('/{userName?}/change-profile', 'UserProfileController@changeProfile')->name('admin.user_profile.change_profile');
     });
+    Route::prefix('/chat')->group(function() {
+        Route::get('/', 'ChatController@index')->name('admin.chat.index');
+        Route::post('/messages-content', 'ChatController@messages')->name('admin.chat.messages_content');
+        Route::post('/messages-send', 'ChatController@sendMessage')->name('admin.chat.send_message');
+        Route::post('/reload-table', 'ChatController@reloadTable')->name('admin.chat.reload_table');
+    });
 });

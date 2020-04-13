@@ -36,6 +36,7 @@
             <!-- ============================================================== -->
             @yield('content')
             <!-- ============================================================== -->
+           
         </div>
         <!-- ============================================================== -->
         <!-- end main wrapper  -->
@@ -49,6 +50,7 @@
         <script src="{{url('/themes/admin/assets/vendor/slimscroll/jquery.slimscroll.js')}}"></script>
         <!-- main js -->
         <script src="{{url('/themes/admin/assets/libs/js/main-js.js')}}"></script>
+      
         <!-- chart chartist js -->
         <script src="{{url('/themes/admin/assets/vendor/charts/chartist-bundle/chartist.min.js')}}"></script>
         <!-- sparkline js -->

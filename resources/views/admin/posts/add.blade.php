@@ -153,7 +153,7 @@
                             <a href="{{ route('admin.posts.index')}}"><button type="button" class="btn btn-danger">@lang('Cancel')</button></a>
                         </form>
                     </div>
-
+                    @include('admin._layout.partials.footer')
                 </div>
             </div>
         </div>
@@ -165,9 +165,9 @@
 <script src="{{url('/themes/admin/assets/vendor/ckeditor/adapters/jquery.js')}}" type="text/javascript"></script>
 
 <script>
- $('#post-form [name="mainContent"]').ckeditor({
-     "height":"400px"
-     
- });
+    $('#post-form [name="mainContent"]').ckeditor({
+    "height":"400px"
+
+    });
 </script>
 @endpush
